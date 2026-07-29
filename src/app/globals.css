@@ -1,26 +1,136 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   Ernie Blaze — design system
+   Background #050505 · Accent #00f0ff · Text #ffffff / #a1a1aa
+   ========================================================================== */
+
+@theme {
+  --color-ink: #050505;
+  --color-ink-raised: #0b0b0d;
+  --color-accent: #00f0ff;
+  --color-accent-dim: #00b3c2;
+  --color-muted: #a1a1aa;
+
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+
+  /* Display sizes are fluid so the hero never wraps awkwardly. */
+  --text-display: clamp(2.75rem, 9vw, 7rem);
+  --text-display--line-height: 0.92;
+  --text-display--letter-spacing: -0.04em;
+
+  --text-section: clamp(2rem, 4.5vw, 3.25rem);
+  --text-section--line-height: 1.05;
+  --text-section--letter-spacing: -0.03em;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  /* Sticky header clearance for anchor jumps */
+  scroll-padding-top: 6rem;
+  background-color: #050505;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #050505;
+  color: #ffffff;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: rgb(0 240 255 / 0.28);
+  color: #ffffff;
+}
+
+/* One visible, consistent focus ring everywhere. */
+:focus-visible {
+  outline: 2px solid #00f0ff;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Utilities
+   -------------------------------------------------------------------------- */
+
+@utility glass {
+  background-color: rgb(255 255 255 / 0.05);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgb(255 255 255 / 0.1);
+}
+
+/* Hairline blueprint grid — ambient texture behind the page. */
+@utility grid-field {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.04) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+/* Monospace route label used as every section eyebrow. */
+@utility route-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #00f0ff;
+}
+
+/* --------------------------------------------------------------------------
+   Keyframes
+   -------------------------------------------------------------------------- */
+
+@keyframes caret-blink {
+  0%, 45% { opacity: 1; }
+  50%, 95% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.82); }
+}
+
+@keyframes marquee-drift {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-caret { animation: caret-blink 1.1s steps(1, end) infinite; }
+.animate-pulse-dot { animation: pulse-dot 2.4s var(--ease-out-soft) infinite; }
+.animate-marquee { animation: marquee-drift 46s linear infinite; }
+
+/* --------------------------------------------------------------------------
+   Reduced motion — kill every ambient loop, keep the layout intact.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .animate-caret { opacity: 1; }
+}
+
+/* Slim scrollbars so opening a modal doesn't change the page's look. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.15) transparent;
 }

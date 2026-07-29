@@ -1,0 +1,108 @@
+[
+  {
+    "id": "8f0c1d2e-4a5b-4c6d-9e70-11a2b3c4d5e6",
+    "slug": "lumen-analytics",
+    "title": "Lumen Analytics",
+    "description": "Marketing site and live product demo for a SaaS analytics tool, rebuilt for speed.",
+    "category": "SaaS Website",
+    "liveUrl": "https://lumen-analytics.example.com",
+    "tech": [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Framer Motion",
+      "Vercel"
+    ],
+    "images": [
+      "/seed/lumen-home.png",
+      "/seed/lumen-dashboard.png"
+    ],
+    "caseStudy": {
+      "problem": "Lumen's old site took 4.8s to become interactive on mobile. Their own product is sold on being fast, so the marketing site was actively undermining the pitch. Demo requests had flatlined for two quarters.",
+      "solution": "Rebuilt on the Next.js App Router with server components, replaced the heavy carousel library with CSS scroll-snap, and put a real, interactive slice of the product on the homepage instead of a video of it.",
+      "result": "Largest Contentful Paint dropped to 0.9s and Lighthouse performance went from 41 to 99. Demo requests rose 62% in the first eight weeks."
+    },
+    "published": true,
+    "createdAt": "2026-06-18T09:00:00.000Z",
+    "updatedAt": "2026-06-18T09:00:00.000Z"
+  },
+  {
+    "id": "2b7e4f19-8c3a-4d21-b5f6-77c8d9e0a1b2",
+    "slug": "vertex-fitness",
+    "title": "Vertex Fitness",
+    "description": "Membership site for a strength gym, with online sign-up that replaced the front desk queue.",
+    "category": "Landing Page",
+    "liveUrl": "https://vertexfitness.example.com",
+    "tech": [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Stripe",
+      "Resend"
+    ],
+    "images": [
+      "/seed/vertex-home.png",
+      "/seed/vertex-membership.png"
+    ],
+    "caseStudy": {
+      "problem": "Vertex could only sign people up in person, during staffed hours. Roughly a third of enquiries arrived after 9pm and most of them never came back.",
+      "solution": "A single-page membership site with three clear tiers, Stripe checkout, and an automated welcome sequence. Pricing sits above the fold because it was the question everyone asked first.",
+      "result": "41% of new memberships now start outside opening hours. Average time from first visit to paid signup fell from six days to under twenty minutes."
+    },
+    "published": true,
+    "createdAt": "2026-04-02T09:00:00.000Z",
+    "updatedAt": "2026-04-02T09:00:00.000Z"
+  },
+  {
+    "id": "5d3a8c60-1f92-4b74-8e05-33f4a5b6c7d8",
+    "slug": "halcyon-coffee-roasters",
+    "title": "Halcyon Coffee Roasters",
+    "description": "Storefront and subscription flow for an independent roastery shipping across the UK.",
+    "category": "E-commerce",
+    "liveUrl": "https://halcyoncoffee.example.com",
+    "tech": [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Shopify Storefront API"
+    ],
+    "images": [
+      "/seed/halcyon-home.png",
+      "/seed/halcyon-product.png"
+    ],
+    "caseStudy": {
+      "problem": "The stock theme buried the subscription option three clicks deep, and product pages said nothing about when the beans were actually roasted — the one thing Halcyon's customers care about.",
+      "solution": "A custom storefront on the Shopify Storefront API. Roast date is now the headline on every product page, and subscriptions are offered inline at the point of adding to the bag.",
+      "result": "Subscription sign-ups tripled in the first quarter, and repeat purchase rate went from 22% to 38%."
+    },
+    "published": true,
+    "createdAt": "2026-02-11T09:00:00.000Z",
+    "updatedAt": "2026-02-11T09:00:00.000Z"
+  },
+  {
+    "id": "9c6b5a44-3e18-4a09-92d7-55e6f7a8b9c0",
+    "slug": "northwind-dental",
+    "title": "Northwind Dental",
+    "description": "Redesign for a city-centre dental practice, built around one job: booking an appointment.",
+    "category": "Redesign",
+    "liveUrl": "https://northwinddental.example.com",
+    "tech": [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Cal.com"
+    ],
+    "images": [
+      "/seed/northwind-home.png",
+      "/seed/northwind-booking.png"
+    ],
+    "caseStudy": {
+      "problem": "Reception was fielding around 80 booking calls a week, most of them asking the same two questions. The old site listed a phone number and little else.",
+      "solution": "Rewrote the site around the booking journey, embedded real-time availability, and answered the two most common questions directly on the homepage in plain language.",
+      "result": "Online bookings now cover 58% of appointments. Call volume dropped by roughly half, and the practice added two same-week slots a day."
+    },
+    "published": true,
+    "createdAt": "2025-11-27T09:00:00.000Z",
+    "updatedAt": "2025-11-27T09:00:00.000Z"
+  }
+]
