@@ -9,6 +9,17 @@ import { Work } from "@/components/work";
 import { getPublishedProjects } from "@/lib/projects";
 import { site } from "@/lib/site";
 
+/**
+ * Rendered per request, reading projects straight from Supabase.
+ *
+ * Deliberately not prerendered at build time: a portfolio's build must not
+ * depend on a database being reachable, or a config gap or a transient
+ * Supabase blip turns into a failed deploy. The upside is that whatever is in
+ * the dashboard is what's on the site, always — no cache to invalidate and no
+ * stale content to explain.
+ */
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const projects = await getPublishedProjects();
 

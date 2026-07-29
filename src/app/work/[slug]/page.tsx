@@ -22,10 +22,8 @@ function hostname(url: string): string {
   }
 }
 
-export async function generateStaticParams() {
-  const projects = await getPublishedProjects();
-  return projects.map((project) => ({ slug: project.slug }));
-}
+/** Per request, for the same reason as the homepage — see src/app/page.tsx. */
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;

@@ -8,6 +8,10 @@ appear on the public site immediately — same data source, no rebuild.
 **Stack:** Next.js 15 (App Router) · TypeScript · Tailwind CSS v4 · Framer
 Motion · lucide-react · Supabase (Postgres + Storage) · Vercel.
 
+> **Setting this up for the first time? Read [SETUP.md](SETUP.md) instead.**
+> It's a step-by-step checklist that names the exact screen for every step.
+> This README is the reference for how the code works.
+
 ---
 
 ## Run it

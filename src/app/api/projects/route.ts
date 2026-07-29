@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
 
 import { isAuthenticated } from "@/lib/auth";
 import { createProject, getAllProjects, getPublishedProjects } from "@/lib/projects";
@@ -31,9 +30,7 @@ export async function POST(request: Request) {
 
   const project = await createProject(result.value);
 
-  // Push the new project onto the public site immediately.
-  revalidatePath("/");
-  revalidatePath("/work/[slug]", "page");
-
+  // No cache to invalidate — the public pages render per request, so the new
+  // project is live as soon as this returns.
   return NextResponse.json({ project }, { status: 201 });
 }
