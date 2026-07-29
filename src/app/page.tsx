@@ -6,7 +6,7 @@ import { Services } from "@/components/services";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Work } from "@/components/work";
-import { getPublishedProjects } from "@/lib/projects";
+import { getPublishedProjectsSafe } from "@/lib/projects";
 import { site } from "@/lib/site";
 
 /**
@@ -21,7 +21,7 @@ import { site } from "@/lib/site";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const projects = await getPublishedProjects();
+  const projects = await getPublishedProjectsSafe();
 
   // Structured data so search results and rich previews name the right person.
   const personSchema = {

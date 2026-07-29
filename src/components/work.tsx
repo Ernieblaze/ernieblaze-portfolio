@@ -16,7 +16,12 @@ export function Work({ projects }: { projects: Project[] }) {
         <SectionHeading
           route="/work"
           title="Selected work"
-          intro="Four recent builds, each with the problem it was hired to solve and what happened after launch."
+          intro={
+            // Don't promise a number of builds when there aren't any to show.
+            projects.length > 0
+              ? "Recent builds, each with the problem it was hired to solve and what happened after launch."
+              : undefined
+          }
         />
 
         {projects.length > 0 ? (

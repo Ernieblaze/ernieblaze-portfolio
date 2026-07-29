@@ -117,6 +117,30 @@ export async function getPublishedProjects(): Promise<Project[]> {
   return (data as Row[]).map(toProject);
 }
 
+/**
+ * Same as `getPublishedProjects`, but never throws.
+ *
+ * The public site is mostly hand-written copy — hero, about, services,
+ * contact — and only the Work section needs the database. A missing key or an
+ * unreachable Supabase must not take the whole page down with it, so callers
+ * that render alongside other content use this and get an empty list plus a
+ * server-side log they can act on.
+ *
+ * Admin routes deliberately do NOT use this: there, a broken connection is the
+ * thing you need to be told about.
+ */
+export async function getPublishedProjectsSafe(): Promise<Project[]> {
+  try {
+    return await getPublishedProjects();
+  } catch (error) {
+    console.error(
+      "[projects] Could not load projects, rendering the page without them:",
+      error,
+    );
+    return [];
+  }
+}
+
 export async function getProjectBySlug(
   slug: string,
 ): Promise<Project | undefined> {

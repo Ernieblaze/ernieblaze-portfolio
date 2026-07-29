@@ -9,7 +9,7 @@ import { BrowserFrame } from "@/components/browser-frame";
 import { Reveal } from "@/components/reveal";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { getProjectBySlug, getPublishedProjects } from "@/lib/projects";
+import { getProjectBySlug, getPublishedProjectsSafe } from "@/lib/projects";
 import { site } from "@/lib/site";
 
 type PageProps = { params: Promise<{ slug: string }> };
@@ -65,7 +65,7 @@ export default async function ProjectPage({ params }: PageProps) {
 
   if (!project || !project.published) notFound();
 
-  const others = (await getPublishedProjects())
+  const others = (await getPublishedProjectsSafe())
     .filter((item) => item.id !== project.id)
     .slice(0, 3);
 
