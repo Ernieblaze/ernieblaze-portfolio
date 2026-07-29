@@ -35,41 +35,56 @@ export type UploadResult =
   | { ok: true; url: string }
   | { ok: false; error: string };
 
-export async function saveUpload(file: File): Promise<UploadResult> {
-  const extension = ALLOWED[file.type];
+/**
+ * Writes raw image bytes to the bucket and returns their public URL.
+ *
+ * Shared by hand-uploaded files and by auto-captured screenshots, so both go
+ * through the same format check, the same size limit, and the same generated
+ * object key.
+ */
+export async function saveImageBytes(
+  bytes: Uint8Array,
+  contentType: string,
+  label: string,
+): Promise<UploadResult> {
+  const extension = ALLOWED[contentType];
   if (!extension) {
     return {
       ok: false,
-      error: `${file.name}: unsupported format. Use PNG, JPG, WebP, AVIF, or GIF.`,
+      error: `${label}: unsupported format. Use PNG, JPG, WebP, AVIF, or GIF.`,
     };
   }
 
-  if (file.size > MAX_BYTES) {
+  if (bytes.byteLength > MAX_BYTES) {
     return {
       ok: false,
-      error: `${file.name}: too large. The limit is ${MAX_UPLOAD_MB} MB.`,
+      error: `${label}: too large. The limit is ${MAX_UPLOAD_MB} MB.`,
     };
   }
 
   // The object key is generated, never taken from the client, so an uploaded
   // filename can't traverse the bucket or overwrite an existing image.
   const key = `${Date.now()}-${randomUUID().slice(0, 8)}.${extension}`;
-  const bytes = new Uint8Array(await file.arrayBuffer());
 
   const { error } = await supabase()
     .storage.from(IMAGE_BUCKET)
     .upload(key, bytes, {
-      contentType: file.type,
+      contentType,
       cacheControl: "31536000",
       upsert: false,
     });
 
   if (error) {
-    return { ok: false, error: `${file.name}: upload failed. ${error.message}` };
+    return { ok: false, error: `${label}: upload failed. ${error.message}` };
   }
 
   const { data } = supabase().storage.from(IMAGE_BUCKET).getPublicUrl(key);
   return { ok: true, url: data.publicUrl };
+}
+
+export async function saveUpload(file: File): Promise<UploadResult> {
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  return saveImageBytes(bytes, file.type, file.name);
 }
 
 /**

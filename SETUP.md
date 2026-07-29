@@ -42,7 +42,7 @@ GitHub again unless you're changing code.
 
 ---
 
-## Step 3 — Clean up the duplicate Vercel projects
+## ✅ Step 3 — Clean up the duplicate Vercel projects (done)
 
 **Why:** every visit to `vercel.com/new` created a *new* project. You likely
 have two or three, all with failed deploys. Extra projects don't cost anything,
@@ -65,7 +65,7 @@ dashboard.
 
 ---
 
-## Step 4 — Add the four settings in Vercel
+## ✅ Step 4 — Add the four settings in Vercel (done)
 
 **Why:** these are the passwords and addresses the site needs. They're kept out
 of the code on purpose, so your public GitHub repo contains no secrets.
@@ -115,7 +115,7 @@ common cause of "I set it but it still doesn't work."
 
 ---
 
-## Step 5 — Redeploy
+## ✅ Step 5 — Redeploy (done)
 
 **Why:** Vercel doesn't automatically rebuild when you change settings. You have
 to tell it to.
@@ -136,7 +136,7 @@ are written to say exactly which setting is missing.
 
 ---
 
-## Step 6 — Put the site next to the database
+## Step 6 — Put the site next to the database (optional, speed only)
 
 **Why:** your Supabase database is in Frankfurt. By default Vercel runs your
 site in Washington DC. Every page load would cross the Atlantic twice to fetch
@@ -156,8 +156,16 @@ Then redeploy once more (Step 5) for it to take effect.
 
 1. Sign in with the `ADMIN_PASSWORD` you invented in Step 4.
 2. Click **Add project**.
-3. Fill it in and click **Add project**.
-4. Open your homepage — it's there immediately. No redeploy needed.
+3. Fill in the details. **Do the Live URL before the screenshot** — then click
+   **Capture screenshot from the live URL** and the preview is made for you.
+   It takes a few seconds; the site is rendered and the image saved to your
+   Supabase bucket.
+4. Click **Add project**.
+5. Open your homepage — it's there immediately. No redeploy needed.
+
+If capture fails, the site is probably behind a login, not public yet, or
+blocking screenshot services. Upload an image manually instead — the **Add
+image** tile is right below the capture button.
 
 That last point is the whole idea: **code changes need a deploy, content changes
 don't.**

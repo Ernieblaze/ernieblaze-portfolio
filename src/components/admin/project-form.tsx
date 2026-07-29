@@ -214,6 +214,7 @@ export function ProjectForm({ project, onSaved, onCancel }: ProjectFormProps) {
         images={form.images}
         onChange={(images) => set("images", images)}
         onError={setError}
+        liveUrl={form.liveUrl}
       />
 
       <fieldset className="space-y-5 rounded-2xl border border-white/10 p-5">

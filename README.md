@@ -95,7 +95,14 @@ projects from `data/projects.json`. Re-running updates them in place; add
      if you leave it off.
    - **Tech stack** — comma separated.
    - **Screenshots** — 1 to 3 images. **The first one is the card image**, so
-     lead with the homepage. Aim for a 16:10 crop, around 1600×1000.
+     lead with the homepage.
+
+     Easiest route: fill in the Live URL, then click **Capture screenshot from
+     the live URL**. The server renders the site and stores the image in your
+     bucket — no manual screenshotting. Upload your own instead when you want a
+     tighter crop, or for a page a screenshot service can't reach (behind a
+     login, staging, heavy client-side rendering). Aim for a 16:10 crop, around
+     1600×1000.
    - **Case study** — problem, what you built, result. Optional, but the result
      field is what wins the next client. Use numbers.
    - **Show on the public site** — uncheck to save it as a draft only you see.

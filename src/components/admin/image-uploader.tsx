@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { ImagePlus, Loader2, X } from "lucide-react";
+import { Camera, ImagePlus, Loader2, X } from "lucide-react";
 
 const MAX_IMAGES = 3;
 const ACCEPT = "image/png,image/jpeg,image/webp,image/avif,image/gif";
@@ -11,17 +11,56 @@ type ImageUploaderProps = {
   images: string[];
   onChange: (images: string[]) => void;
   onError: (message: string | null) => void;
+  /** The project's live URL, so a preview can be captured from it. */
+  liveUrl: string;
 };
 
 /**
  * Uploads screenshots straight away and holds their URLs in form state, so the
  * project record only ever references files that already exist on disk.
  */
-export function ImageUploader({ images, onChange, onError }: ImageUploaderProps) {
+export function ImageUploader({
+  images,
+  onChange,
+  onError,
+  liveUrl,
+}: ImageUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [capturing, setCapturing] = useState(false);
 
   const remaining = MAX_IMAGES - images.length;
+
+  /** Screenshots the live URL server-side and adds the result. */
+  async function handleCapture() {
+    if (!liveUrl.trim()) {
+      onError("Fill in the live URL first, then capture.");
+      return;
+    }
+
+    setCapturing(true);
+    onError(null);
+
+    try {
+      const response = await fetch("/api/screenshot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: liveUrl }),
+      });
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        onError(data.error ?? "Couldn't capture that site.");
+        return;
+      }
+
+      onChange([...images, data.url].slice(0, MAX_IMAGES));
+    } catch {
+      onError("Couldn't reach the server to capture the screenshot.");
+    } finally {
+      setCapturing(false);
+    }
+  }
 
   async function handleFiles(fileList: FileList | null) {
     if (!fileList || fileList.length === 0) return;
@@ -58,7 +97,7 @@ export function ImageUploader({ images, onChange, onError }: ImageUploaderProps)
 
   return (
     <div>
-      <div className="mb-2 flex items-baseline justify-between">
+      <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
         <span className="text-muted font-mono text-xs tracking-wider uppercase">
           Screenshots
         </span>
@@ -66,6 +105,29 @@ export function ImageUploader({ images, onChange, onError }: ImageUploaderProps)
           {images.length}/{MAX_IMAGES} · first one is the card image
         </span>
       </div>
+
+      {/* Capture from the live URL — the fast path, so screenshots don't have
+          to be taken and uploaded by hand. */}
+      {remaining > 0 ? (
+        <button
+          type="button"
+          onClick={handleCapture}
+          disabled={capturing || uploading}
+          className="border-accent/30 text-accent hover:border-accent/60 hover:bg-accent/10 mb-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-dashed px-4 py-3 text-sm font-medium transition-colors disabled:opacity-60"
+        >
+          {capturing ? (
+            <>
+              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+              Capturing the site — this takes a few seconds
+            </>
+          ) : (
+            <>
+              <Camera className="size-4" aria-hidden="true" />
+              Capture screenshot from the live URL
+            </>
+          )}
+        </button>
+      ) : null}
 
       <div className="grid grid-cols-3 gap-3">
         {images.map((src, index) => (
@@ -125,7 +187,8 @@ export function ImageUploader({ images, onChange, onError }: ImageUploaderProps)
       />
 
       <p className="text-muted/60 mt-2 font-mono text-[11px]">
-        PNG, JPG, WebP, AVIF or GIF · 6 MB each · saved to data/uploads
+        Capture is automatic. Upload your own for a tighter crop or a page a
+        screenshot service can&rsquo;t reach.
       </p>
     </div>
   );
