@@ -44,18 +44,25 @@ Do this once, before the first run.
 `project-images` storage bucket, and read-only RLS policies. It's idempotent, so
 re-running is safe.
 
-**3. Copy the credentials.** Project Settings → API:
+**3. Copy the credentials.** Project Settings → API Keys:
 
 | Dashboard field | `.env.local` variable |
 | --- | --- |
-| Project URL | `NEXT_PUBLIC_SUPABASE_URL` |
-| `service_role` secret | `SUPABASE_SERVICE_ROLE_KEY` |
+| Project URL (Settings → General) | `NEXT_PUBLIC_SUPABASE_URL` |
+| **Secret keys** → `default` (`sb_secret_…`) | `SUPABASE_SERVICE_ROLE_KEY` |
 
-> **The service-role key bypasses row-level security.** It is server-only —
-> never prefix it with `NEXT_PUBLIC_`, never use it in a client component, and
-> rotate it immediately if it's ever committed or pasted somewhere public.
-> `src/lib/supabase.ts` imports `server-only` so a mistake becomes a build
-> error.
+Older projects show a **Legacy anon, service_role** tab instead — use the
+`service_role` key there (`eyJhbGci…`). Both formats work and both grant the
+same privileges.
+
+Do **not** use the publishable / `anon` key. It's read-only, so the public site
+would render but every dashboard save would fail.
+
+> **This key bypasses row-level security.** It is server-only — never prefix it
+> with `NEXT_PUBLIC_`, never use it in a client component, and rotate it
+> immediately if it's ever committed or pasted somewhere public.
+> `src/lib/supabase.ts` imports `server-only`, so a client-side import becomes
+> a build error rather than a leaked key.
 
 **4. Load the placeholder projects** (optional — skip if you're going straight
 to real work):
