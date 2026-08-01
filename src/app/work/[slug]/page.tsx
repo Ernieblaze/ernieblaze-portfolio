@@ -22,8 +22,24 @@ function hostname(url: string): string {
   }
 }
 
-/** Per request, for the same reason as the homepage — see src/app/page.tsx. */
-export const dynamic = "force-dynamic";
+/**
+ * Cached once generated — see src/app/page.tsx for the reasoning.
+ *
+ * `generateStaticParams` returning nothing is doing real work here: it opts the
+ * route into incremental static generation without naming a single slug, so the
+ * build never asks Supabase what exists — that database dependency is exactly
+ * what must stay out of a deploy. Each project page is rendered on its first
+ * request and cached from then on, so only one visitor per project ever waits,
+ * and `revalidatePath` refreshes it the moment the project is edited.
+ *
+ * Without it the route is fully dynamic and every visit re-queries the
+ * database, which is the cost this change exists to remove.
+ */
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  return [];
+}
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -88,7 +104,7 @@ export default async function ProjectPage({ params }: PageProps) {
           <h1 className="font-display mt-5 text-section font-bold text-balance">
             {project.title}
           </h1>
-          <p className="mt-6 max-w-2xl text-xl leading-relaxed text-white/85 text-balance">
+          <p className="mt-6 max-w-2xl text-xl leading-relaxed text-fg/85 text-balance">
             {project.description}
           </p>
 
@@ -96,7 +112,7 @@ export default async function ProjectPage({ params }: PageProps) {
             href={project.liveUrl}
             target="_blank"
             rel="noreferrer noopener"
-            className="bg-accent mt-8 inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-medium text-black transition-shadow duration-500 hover:shadow-[0_0_44px_-6px_#00f0ff]"
+            className="bg-accent mt-8 inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-medium text-on-accent transition-shadow duration-500 hover:shadow-[0_0_44px_-6px_var(--glow-strong)]"
           >
             Visit {hostname(project.liveUrl)}
             <ArrowUpRight className="size-4" aria-hidden="true" />
@@ -109,7 +125,7 @@ export default async function ProjectPage({ params }: PageProps) {
             <Reveal key={src} delay={index * 0.06}>
               <BrowserFrame
                 address={hostname(project.liveUrl)}
-                className="shadow-[0_40px_120px_-60px_rgba(0,240,255,0.4)]"
+                className="shadow-[0_40px_120px_-60px_var(--glow-mid)]"
               >
                 <div className="relative aspect-16/10">
                   <Image
@@ -131,7 +147,7 @@ export default async function ProjectPage({ params }: PageProps) {
             {CHAPTERS.map(({ key, label }, index) =>
               project.caseStudy[key] ? (
                 <Reveal key={key} delay={index * 0.05}>
-                  <div className="border-l border-white/10 pl-6">
+                  <div className="border-l border-line pl-6">
                     <h2 className="route-label">{label}</h2>
                     <p className="text-muted mt-4 text-lg leading-relaxed">
                       {project.caseStudy[key]}
@@ -161,14 +177,14 @@ export default async function ProjectPage({ params }: PageProps) {
 
         {/* Next projects */}
         {others.length > 0 ? (
-          <Reveal className="mt-24 border-t border-white/10 pt-12">
+          <Reveal className="mt-24 border-t border-line pt-12">
             <h2 className="route-label">/more-work</h2>
             <ul className="mt-8 grid gap-4 sm:grid-cols-3">
               {others.map((item) => (
                 <li key={item.id}>
                   <Link
                     href={`/work/${item.slug}`}
-                    className="group hover:border-accent/30 block rounded-2xl border border-white/10 bg-white/[0.03] p-3 transition-colors"
+                    className="group hover:border-accent/30 block rounded-2xl border border-line bg-surface p-3 transition-colors"
                   >
                     <div className="relative aspect-16/10 overflow-hidden rounded-lg">
                       <Image

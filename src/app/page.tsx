@@ -10,15 +10,19 @@ import { getPublishedProjectsSafe } from "@/lib/projects";
 import { site } from "@/lib/site";
 
 /**
- * Rendered per request, reading projects straight from Supabase.
+ * Prerendered and cached, so a visitor is never the one waiting on Supabase.
  *
- * Deliberately not prerendered at build time: a portfolio's build must not
- * depend on a database being reachable, or a config gap or a transient
- * Supabase blip turns into a failed deploy. The upside is that whatever is in
- * the dashboard is what's on the site, always — no cache to invalidate and no
- * stale content to explain.
+ * The build still must not depend on the database being reachable — a config
+ * gap or a transient blip cannot be allowed to fail a deploy. That guarantee
+ * comes from `getPublishedProjectsSafe`, which returns an empty list instead of
+ * throwing, so the page renders either way. `force-dynamic` is not needed for
+ * it, and cost every visitor a round trip to Frankfurt to buy nothing.
+ *
+ * Freshness is not on this timer in practice: every mutation calls
+ * `revalidatePath`, so dashboard edits are live immediately. The window below
+ * is only a backstop for changes made outside the app.
  */
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export default async function Home() {
   const projects = await getPublishedProjectsSafe();
