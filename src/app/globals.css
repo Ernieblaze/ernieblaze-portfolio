@@ -2,15 +2,101 @@
 
 /* ==========================================================================
    Ernie Blaze — design system
-   Background #050505 · Accent #00f0ff · Text #ffffff / #a1a1aa
+
+   One set of semantic tokens, two palettes. Components reference the tokens
+   (`bg-ink`, `text-fg`, `border-line`, `text-accent`) and never a raw colour,
+   so adding light mode meant swapping values here rather than editing every
+   file — and there is no `dark:` variant scattered through the markup.
+
+   Dark  · near-black with electric cyan
+   Light · cool lab white with deep teal-cyan
    ========================================================================== */
 
-@theme {
-  --color-ink: #050505;
-  --color-ink-raised: #0b0b0d;
-  --color-accent: #00f0ff;
-  --color-accent-dim: #00b3c2;
-  --color-muted: #a1a1aa;
+:root,
+[data-theme="dark"] {
+  --bg: #050505;
+  --bg-raised: #0e0e11;
+  --fg: #ffffff;
+  --muted: #a1a1aa;
+  --accent: #00f0ff;
+  --accent-hover: #7df6ff;
+  --on-accent: #04161a;
+
+  --glass-fill: rgb(255 255 255 / 0.05);
+  --glass-border: rgb(255 255 255 / 0.1);
+  --line: rgb(255 255 255 / 0.1);
+  --line-soft: rgb(255 255 255 / 0.05);
+  --surface: rgb(255 255 255 / 0.03);
+  --surface-hover: rgb(255 255 255 / 0.05);
+
+  --grid-line: rgb(255 255 255 / 0.04);
+  /* Small pill backgrounds (tech tags, deliverables) */
+  --chip: rgb(255 255 255 / 0.06);
+  /* Cards sit on near-black, so they need no drop shadow to separate */
+  --shadow-lift: 0 0 0 0 transparent;
+
+  /* Cyan bloom, used for glows and shadows */
+  --glow-soft: rgb(0 240 255 / 0.16);
+  --glow-mid: rgb(0 240 255 / 0.35);
+  --glow-strong: rgb(0 240 255 / 0.55);
+
+  /* Particle field in the hero */
+  --particle: 0 240 255;
+  --particle-opacity: 0.75;
+  --particle-link-opacity: 0.16;
+
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --bg: #f4f7f9;
+  --bg-raised: #ffffff;
+  --fg: #071216;
+  --muted: #52666e;
+  --accent: #0b7285;
+  --accent-hover: #095c6b;
+  --on-accent: #ffffff;
+
+  --glass-fill: rgb(255 255 255 / 0.72);
+  --glass-border: rgb(7 18 22 / 0.09);
+  --line: rgb(7 18 22 / 0.1);
+  --line-soft: rgb(7 18 22 / 0.06);
+  --surface: rgb(255 255 255 / 0.7);
+  --surface-hover: rgb(255 255 255 / 0.95);
+
+  --grid-line: rgb(7 18 22 / 0.045);
+  --chip: rgb(7 18 22 / 0.05);
+  /* On light, borders alone read as flat — a soft neutral lift is what makes
+     surfaces look like objects rather than outlined boxes. */
+  --shadow-lift:
+    0 1px 2px rgb(7 18 22 / 0.04),
+    0 12px 32px -16px rgb(7 18 22 / 0.14);
+
+  /* Light needs a tighter, cooler bloom or it turns to haze */
+  --glow-soft: rgb(11 114 133 / 0.1);
+  --glow-mid: rgb(11 114 133 / 0.18);
+  --glow-strong: rgb(11 114 133 / 0.3);
+
+  --particle: 11 114 133;
+  --particle-opacity: 0.68;
+  --particle-link-opacity: 0.2;
+
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-ink: var(--bg);
+  --color-ink-raised: var(--bg-raised);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-on-accent: var(--on-accent);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-chip: var(--chip);
 
   --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
@@ -28,32 +114,41 @@
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-:root {
-  color-scheme: dark;
-}
-
 html {
   scroll-behavior: smooth;
-  /* Sticky header clearance for anchor jumps */
-  scroll-padding-top: 6rem;
-  background-color: #050505;
+  /*
+   * The single source of truth for where an anchor lands.
+   *
+   * The fixed header is 4.5rem (`h-18`), so this clears it with a little
+   * breathing room above the section. Do NOT also put `scroll-mt-*` on the
+   * targets: scroll-padding and scroll-margin stack, which lands every section
+   * twice as far down the page as intended. Because it lives on the scroll
+   * container it applies to everything — link clicks, `scrollIntoView`,
+   * find-in-page and focus jumps alike.
+   */
+  scroll-padding-top: 5.5rem;
+  background-color: var(--bg);
 }
 
 body {
-  background-color: #050505;
-  color: #ffffff;
+  background-color: var(--bg);
+  color: var(--fg);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  /* Only the palette animates on a theme switch, not layout. */
+  transition:
+    background-color 0.35s var(--ease-out-soft),
+    color 0.35s var(--ease-out-soft);
 }
 
 ::selection {
-  background-color: rgb(0 240 255 / 0.28);
-  color: #ffffff;
+  background-color: var(--glow-mid);
+  color: var(--fg);
 }
 
 /* One visible, consistent focus ring everywhere. */
 :focus-visible {
-  outline: 2px solid #00f0ff;
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: 4px;
 }
@@ -63,17 +158,23 @@ body {
    -------------------------------------------------------------------------- */
 
 @utility glass {
-  background-color: rgb(255 255 255 / 0.05);
+  background-color: var(--glass-fill);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgb(255 255 255 / 0.1);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-lift);
+}
+
+/* Opaque panels that need the same elevation as glass. */
+@utility lift {
+  box-shadow: var(--shadow-lift);
 }
 
 /* Hairline blueprint grid — ambient texture behind the page. */
 @utility grid-field {
   background-image:
-    linear-gradient(to right, rgb(255 255 255 / 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(255 255 255 / 0.04) 1px, transparent 1px);
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
   background-size: 72px 72px;
 }
 
@@ -84,7 +185,25 @@ body {
   line-height: 1;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #00f0ff;
+  color: var(--accent);
+}
+
+/* Cyan lift on hover, tuned per theme so light mode doesn't go hazy. */
+@utility glow-hover {
+  transition: box-shadow 0.5s var(--ease-out-soft);
+  &:hover {
+    box-shadow: 0 0 44px -6px var(--glow-strong);
+  }
+}
+
+@utility glow-card {
+  transition:
+    box-shadow 0.5s var(--ease-out-soft),
+    border-color 0.5s var(--ease-out-soft),
+    transform 0.5s var(--ease-out-soft);
+  &:hover {
+    box-shadow: 0 28px 80px -40px var(--glow-mid);
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -113,6 +232,7 @@ body {
 
 /* --------------------------------------------------------------------------
    Reduced motion — kill every ambient loop, keep the layout intact.
+   The particle field checks this in JS too and renders a still frame.
    -------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
@@ -132,5 +252,5 @@ body {
 /* Slim scrollbars so opening a modal doesn't change the page's look. */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgb(255 255 255 / 0.15) transparent;
+  scrollbar-color: var(--line) transparent;
 }

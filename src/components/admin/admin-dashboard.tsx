@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { ProjectForm } from "@/components/admin/project-form";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { site } from "@/lib/site";
 import type { Project } from "@/lib/types";
 
@@ -55,7 +56,7 @@ export function AdminDashboard({ projects }: { projects: Project[] }) {
   return (
     <div className="min-h-dvh">
       {/* Bar */}
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#050505]/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b border-line bg-ink/80 backdrop-blur-xl">
         <div className="mx-auto flex h-18 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
           <div className="flex items-baseline gap-3">
             <span className="font-display text-lg font-bold tracking-tight">
@@ -65,9 +66,11 @@ export function AdminDashboard({ projects }: { projects: Project[] }) {
           </div>
 
           <div className="flex items-center gap-2">
+            <ThemeToggle />
+
             <Link
               href="/"
-              className="text-muted hover:text-accent hidden items-center gap-1.5 rounded-full border border-white/10 px-4 py-2 text-sm transition-colors sm:inline-flex"
+              className="text-muted hover:text-accent hidden items-center gap-1.5 rounded-full border border-line px-4 py-2 text-sm transition-colors sm:inline-flex"
             >
               View site
               <ExternalLink className="size-3.5" aria-hidden="true" />
@@ -75,7 +78,7 @@ export function AdminDashboard({ projects }: { projects: Project[] }) {
             <button
               type="button"
               onClick={handleSignOut}
-              className="text-muted hover:text-accent inline-flex items-center gap-1.5 rounded-full border border-white/10 px-4 py-2 text-sm transition-colors"
+              className="text-muted hover:text-accent inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2 text-sm transition-colors"
             >
               <LogOut className="size-3.5" aria-hidden="true" />
               Sign out
@@ -99,7 +102,7 @@ export function AdminDashboard({ projects }: { projects: Project[] }) {
             <button
               type="button"
               onClick={() => setPanel({ mode: "new" })}
-              className="bg-accent inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium text-black transition-shadow duration-500 hover:shadow-[0_0_40px_-8px_#00f0ff]"
+              className="bg-accent inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium text-on-accent transition-shadow duration-500 hover:shadow-[0_0_40px_-8px_var(--glow-strong)]"
             >
               <Plus className="size-4" aria-hidden="true" />
               Add project
@@ -129,9 +132,9 @@ export function AdminDashboard({ projects }: { projects: Project[] }) {
           {projects.map((project) => (
             <li
               key={project.id}
-              className="hover:border-accent/25 flex flex-col gap-5 rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition-colors sm:flex-row sm:items-center"
+              className="hover:border-accent/25 flex flex-col gap-5 rounded-2xl border border-line bg-surface p-4 transition-colors sm:flex-row sm:items-center"
             >
-              <div className="relative aspect-16/10 w-full shrink-0 overflow-hidden rounded-xl border border-white/10 sm:w-40">
+              <div className="relative aspect-16/10 w-full shrink-0 overflow-hidden rounded-xl border border-line sm:w-40">
                 <Image
                   src={project.images[0]}
                   alt=""
@@ -150,7 +153,7 @@ export function AdminDashboard({ projects }: { projects: Project[] }) {
                     className={`rounded-full px-2 py-0.5 font-mono text-[10px] tracking-wider uppercase ${
                       project.published
                         ? "bg-accent/15 text-accent"
-                        : "text-muted bg-white/10"
+                        : "text-muted bg-line"
                     }`}
                   >
                     {project.published ? "Live" : "Draft"}
@@ -179,7 +182,7 @@ export function AdminDashboard({ projects }: { projects: Project[] }) {
                     setPanel({ mode: "edit", project });
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
-                  className="text-muted hover:border-accent/50 hover:text-accent inline-flex items-center gap-1.5 rounded-full border border-white/10 px-4 py-2 text-sm transition-colors"
+                  className="text-muted hover:border-accent/50 hover:text-accent inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2 text-sm transition-colors"
                 >
                   <Pencil className="size-3.5" aria-hidden="true" />
                   Edit
@@ -190,7 +193,7 @@ export function AdminDashboard({ projects }: { projects: Project[] }) {
                   type="button"
                   onClick={() => handleDelete(project)}
                   disabled={deletingId === project.id}
-                  className="text-muted inline-flex items-center justify-center rounded-full border border-white/10 p-2.5 transition-colors hover:border-red-500/50 hover:text-red-400 disabled:opacity-50"
+                  className="text-muted inline-flex items-center justify-center rounded-full border border-line p-2.5 transition-colors hover:border-red-500/50 hover:text-red-400 disabled:opacity-50"
                   aria-label={`Delete ${project.title}`}
                 >
                   {deletingId === project.id ? (
@@ -213,7 +216,7 @@ export function AdminDashboard({ projects }: { projects: Project[] }) {
             <button
               type="button"
               onClick={() => setPanel({ mode: "new" })}
-              className="bg-accent mt-6 inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium text-black"
+              className="bg-accent mt-6 inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium text-on-accent"
             >
               <Plus className="size-4" aria-hidden="true" />
               Add project

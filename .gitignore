@@ -48,5 +48,8 @@ next-env.d.ts
 # local screenshot output from scripts/screenshots.mjs
 /shots
 
+# local agent/editor settings
+/.claude
+
 .vercel
 .env*

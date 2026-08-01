@@ -30,21 +30,21 @@ export function BrowserFrame({
     >
       {/* Chrome */}
       <div
-        className={`flex items-center gap-3 border-b border-white/10 bg-white/[0.03] ${
+        className={`flex items-center gap-3 border-b border-line bg-surface ${
           compact ? "px-3 py-2" : "px-4 py-3"
         }`}
       >
         <div className="flex shrink-0 items-center gap-1.5" aria-hidden="true">
-          {["bg-white/20", "bg-white/15", "bg-white/10"].map((tone) => (
+          {["opacity-100", "opacity-70", "opacity-45"].map((tone) => (
             <span
               key={tone}
-              className={`block rounded-full ${tone} ${compact ? "size-2" : "size-2.5"}`}
+              className={`bg-muted/40 block rounded-full ${tone} ${compact ? "size-2" : "size-2.5"}`}
             />
           ))}
         </div>
 
         <div
-          className={`flex min-w-0 flex-1 items-center gap-2 rounded-md border border-white/10 bg-black/40 ${
+          className={`bg-ink/60 flex min-w-0 flex-1 items-center gap-2 rounded-md border border-line ${
             compact ? "px-2 py-1" : "px-3 py-1.5"
           }`}
         >
@@ -60,8 +60,8 @@ export function BrowserFrame({
         </div>
       </div>
 
-      {/* Viewport */}
-      <div className="relative bg-black/40">{children}</div>
+      {/* Viewport — only visible while a screenshot loads */}
+      <div className="bg-ink-raised relative">{children}</div>
     </div>
   );
 }

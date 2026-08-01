@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test:smoke": "node scripts/smoke.mjs",
+    "test:nav": "node scripts/nav-test.mjs",
+    "test:theme": "node scripts/theme-test.mjs",
     "screenshots": "node scripts/screenshots.mjs ./shots"
   },
   "dependencies": {

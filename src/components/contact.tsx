@@ -10,7 +10,7 @@ import { brandIcons } from "@/components/brand-icons";
 import { site } from "@/lib/site";
 
 const FIELD_CLASS =
-  "w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-white placeholder:text-white/30 transition-colors duration-300 focus:border-accent/60 focus:bg-white/[0.06] focus:outline-none";
+  "w-full rounded-xl border border-line bg-surface px-4 py-3.5 text-fg placeholder:text-muted/70 transition-colors duration-300 focus:border-accent/60 focus:bg-surface-hover focus:outline-none";
 
 export function Contact() {
   const [sent, setSent] = useState(false);
@@ -38,7 +38,7 @@ export function Contact() {
   }
 
   return (
-    <section id="contact" className="scroll-mt-24 py-24 sm:py-32">
+    <section id="contact" className="py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
           route="/contact"
@@ -139,7 +139,7 @@ export function Contact() {
                   <Magnetic>
                     <button
                       type="submit"
-                      className="bg-accent group inline-flex items-center gap-2 rounded-full px-7 py-4 font-medium text-black transition-shadow duration-500 hover:shadow-[0_0_44px_-6px_#00f0ff]"
+                      className="bg-accent group inline-flex items-center gap-2 rounded-full px-7 py-4 font-medium text-on-accent transition-shadow duration-500 hover:shadow-[0_0_44px_-6px_var(--glow-strong)]"
                     >
                       Send message
                       <Send
@@ -158,7 +158,7 @@ export function Contact() {
             <div className="flex h-full flex-col gap-4">
               <a
                 href={`mailto:${site.email}`}
-                className="group hover:border-accent/30 flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors duration-300"
+                className="group hover:border-accent/30 flex items-center justify-between gap-4 rounded-2xl border border-line bg-surface p-6 transition-colors duration-300"
               >
                 <span className="min-w-0">
                   <span className="route-label block">Email</span>
@@ -180,7 +180,7 @@ export function Contact() {
                     href={social.href}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="group hover:border-accent/30 flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors duration-300"
+                    className="group hover:border-accent/30 flex items-center justify-between gap-4 rounded-2xl border border-line bg-surface p-6 transition-colors duration-300"
                   >
                     <span className="min-w-0">
                       <span className="route-label block">{social.name}</span>

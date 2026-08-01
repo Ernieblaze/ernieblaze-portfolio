@@ -35,11 +35,11 @@ export function AdminConfigError({ message }: { message: string }) {
           <p className="route-label">How to fix it</p>
           <ol className="text-muted mt-4 space-y-3 text-sm leading-relaxed">
             <li>
-              <span className="text-white">1.</span> In Vercel, open your
+              <span className="text-fg">1.</span> In Vercel, open your
               project &rarr; Settings &rarr; Environment Variables.
             </li>
             <li>
-              <span className="text-white">2.</span> Check{" "}
+              <span className="text-fg">2.</span> Check{" "}
               <code className="text-accent font-mono text-xs">
                 NEXT_PUBLIC_SUPABASE_URL
               </code>{" "}
@@ -50,13 +50,13 @@ export function AdminConfigError({ message }: { message: string }) {
               both exist, with no trailing spaces.
             </li>
             <li>
-              <span className="text-white">3.</span> The second one must be the{" "}
-              <span className="text-white">secret</span> key (
+              <span className="text-fg">3.</span> The second one must be the{" "}
+              <span className="text-fg">secret</span> key (
               <code className="font-mono text-xs">sb_secret_…</code>), not the
               publishable one.
             </li>
             <li>
-              <span className="text-white">4.</span> Redeploy — Vercel only
+              <span className="text-fg">4.</span> Redeploy — Vercel only
               picks up new variables on a fresh build.
             </li>
           </ol>

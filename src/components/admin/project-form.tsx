@@ -7,7 +7,7 @@ import { ImageUploader } from "@/components/admin/image-uploader";
 import type { Project } from "@/lib/types";
 
 const FIELD =
-  "w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white placeholder:text-white/25 transition-colors focus:border-accent/60 focus:outline-none";
+  "w-full rounded-xl border border-line bg-surface px-4 py-3 text-fg placeholder:text-muted/60 transition-colors focus:border-accent/60 focus:outline-none";
 
 const LABEL = "text-muted mb-2 block font-mono text-xs tracking-wider uppercase";
 
@@ -217,7 +217,7 @@ export function ProjectForm({ project, onSaved, onCancel }: ProjectFormProps) {
         liveUrl={form.liveUrl}
       />
 
-      <fieldset className="space-y-5 rounded-2xl border border-white/10 p-5">
+      <fieldset className="space-y-5 rounded-2xl border border-line p-5">
         <legend className="route-label px-2">Case study</legend>
 
         {(
@@ -243,7 +243,7 @@ export function ProjectForm({ project, onSaved, onCancel }: ProjectFormProps) {
         ))}
       </fieldset>
 
-      <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-4">
+      <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-line bg-surface p-4">
         <input
           type="checkbox"
           checked={form.published}
@@ -272,7 +272,7 @@ export function ProjectForm({ project, onSaved, onCancel }: ProjectFormProps) {
         <button
           type="submit"
           disabled={busy}
-          className="bg-accent inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium text-black transition-shadow duration-500 hover:shadow-[0_0_40px_-8px_#00f0ff] disabled:opacity-60"
+          className="bg-accent inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium text-on-accent transition-shadow duration-500 hover:shadow-[0_0_40px_-8px_var(--glow-strong)] disabled:opacity-60"
         >
           {busy ? (
             <>
@@ -290,7 +290,7 @@ export function ProjectForm({ project, onSaved, onCancel }: ProjectFormProps) {
           <button
             type="button"
             onClick={onCancel}
-            className="text-muted hover:text-white rounded-full border border-white/10 px-6 py-3 text-sm transition-colors"
+            className="text-muted hover:text-fg rounded-full border border-line px-6 py-3 text-sm transition-colors"
           >
             Cancel
           </button>

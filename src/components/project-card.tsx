@@ -27,7 +27,7 @@ export function ProjectCard({ project, index, onOpen }: ProjectCardProps) {
   return (
     <motion.article
       id={project.slug}
-      className="group hover:border-accent/30 relative scroll-mt-28 rounded-2xl border border-white/10 bg-white/[0.03] p-3 transition-colors duration-500 hover:shadow-[0_28px_80px_-40px_#00f0ff] sm:p-4"
+      className="group hover:border-accent/30 lift relative rounded-2xl border border-line bg-surface p-3 transition-colors duration-500 hover:shadow-[0_28px_80px_-40px_var(--glow-strong)] sm:p-4"
       initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
       whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
@@ -65,14 +65,14 @@ export function ProjectCard({ project, index, onOpen }: ProjectCardProps) {
           {project.tech.slice(0, 5).map((item) => (
             <li
               key={item}
-              className="text-muted rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1 font-mono text-[11px]"
+              className="text-muted rounded-md border border-line bg-surface px-2.5 py-1 font-mono text-[11px]"
             >
               {item}
             </li>
           ))}
         </ul>
 
-        <div className="mt-7 flex items-center justify-between gap-4 border-t border-white/5 pt-5">
+        <div className="mt-7 flex items-center justify-between gap-4 border-t border-line-soft pt-5">
           {/* Stretched link: covers the whole card without nesting interactives */}
           <button
             type="button"
@@ -87,7 +87,7 @@ export function ProjectCard({ project, index, onOpen }: ProjectCardProps) {
             href={project.liveUrl}
             target="_blank"
             rel="noreferrer noopener"
-            className="text-muted hover:border-accent/50 hover:text-accent relative z-10 inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/10 px-4 py-2 text-sm transition-colors duration-300"
+            className="text-muted hover:border-accent/50 hover:text-accent relative z-10 inline-flex shrink-0 items-center gap-1.5 rounded-full border border-line px-4 py-2 text-sm transition-colors duration-300"
           >
             Live preview
             <ArrowUpRight className="size-3.5" aria-hidden="true" />

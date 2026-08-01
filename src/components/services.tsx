@@ -4,7 +4,7 @@ import { site } from "@/lib/site";
 
 export function Services() {
   return (
-    <section id="services" className="scroll-mt-24 py-24 sm:py-32">
+    <section id="services" className="py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
           route="/services"
@@ -18,7 +18,7 @@ export function Services() {
               as="li"
               key={service.title}
               delay={Math.min(index, 3) * 0.07}
-              className="group hover:border-accent/30 flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-7 transition-all duration-500 hover:bg-white/[0.05] hover:shadow-[0_24px_70px_-45px_#00f0ff]"
+              className="group hover:border-accent/30 lift flex flex-col rounded-2xl border border-line bg-surface p-7 transition-all duration-500 hover:bg-surface-hover hover:shadow-[0_24px_70px_-45px_var(--glow-strong)]"
             >
               <h3 className="font-display group-hover:text-accent text-xl font-bold tracking-tight transition-colors duration-300">
                 {service.title}
@@ -28,11 +28,11 @@ export function Services() {
                 {service.description}
               </p>
 
-              <ul className="mt-6 flex flex-wrap gap-1.5 border-t border-white/5 pt-5">
+              <ul className="mt-6 flex flex-wrap gap-1.5 border-t border-line-soft pt-5">
                 {service.deliverables.map((item) => (
                   <li
                     key={item}
-                    className="text-muted rounded-md bg-white/[0.05] px-2.5 py-1 font-mono text-[11px]"
+                    className="text-muted bg-chip rounded-md px-2.5 py-1 font-mono text-[11px]"
                   >
                     {item}
                   </li>

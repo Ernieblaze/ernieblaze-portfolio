@@ -100,14 +100,14 @@ export function ProjectModal({
             role="dialog"
             aria-modal="true"
             aria-labelledby="case-study-title"
-            className="relative mx-auto my-4 max-w-4xl rounded-2xl border border-white/10 bg-[#0b0b0d]/95 shadow-[0_60px_160px_-60px_#00f0ff] backdrop-blur-2xl sm:my-8"
+            className="relative mx-auto my-4 max-w-4xl rounded-2xl border border-line bg-ink-raised/95 shadow-[0_60px_160px_-60px_var(--glow-strong)] backdrop-blur-2xl sm:my-8"
             initial={reduceMotion ? undefined : { opacity: 0, y: 28, scale: 0.985 }}
             animate={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
             exit={reduceMotion ? undefined : { opacity: 0, y: 20, scale: 0.99 }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           >
             {/* Header */}
-            <div className="sticky top-0 z-10 flex items-start justify-between gap-6 rounded-t-2xl border-b border-white/10 bg-[#0b0b0d]/90 px-6 py-5 backdrop-blur-xl sm:px-8">
+            <div className="sticky top-0 z-10 flex items-start justify-between gap-6 rounded-t-2xl border-b border-line bg-ink-raised/90 px-6 py-5 backdrop-blur-xl sm:px-8">
               <div className="min-w-0">
                 <p className="route-label">{project.category}</p>
                 <h2
@@ -129,7 +129,7 @@ export function ProjectModal({
             </div>
 
             <div className="px-6 pt-6 pb-8 sm:px-8 sm:pb-10">
-              <p className="text-lg leading-relaxed text-white/85">
+              <p className="text-lg leading-relaxed text-fg/85">
                 {project.description}
               </p>
 
@@ -158,7 +158,7 @@ export function ProjectModal({
               <div className="mt-10 space-y-8">
                 {CHAPTERS.map(({ key, label }) =>
                   project.caseStudy[key] ? (
-                    <div key={key} className="border-l border-white/10 pl-5">
+                    <div key={key} className="border-l border-line pl-5">
                       <h3 className="route-label">{label}</h3>
                       <p className="text-muted mt-3 leading-relaxed">
                         {project.caseStudy[key]}
@@ -188,7 +188,7 @@ export function ProjectModal({
                   href={project.liveUrl}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="bg-accent inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-medium text-black transition-shadow duration-500 hover:shadow-[0_0_44px_-6px_#00f0ff]"
+                  className="bg-accent inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-medium text-on-accent transition-shadow duration-500 hover:shadow-[0_0_44px_-6px_var(--glow-strong)]"
                 >
                   Visit {hostname(project.liveUrl)}
                   <ArrowUpRight className="size-4" aria-hidden="true" />
@@ -197,7 +197,7 @@ export function ProjectModal({
 
                 <Link
                   href={`/work/${project.slug}`}
-                  className="text-muted hover:border-accent/50 hover:text-accent inline-flex items-center gap-2 rounded-full border border-white/10 px-6 py-3.5 text-sm transition-colors"
+                  className="text-muted hover:border-accent/50 hover:text-accent inline-flex items-center gap-2 rounded-full border border-line px-6 py-3.5 text-sm transition-colors"
                 >
                   Open as a page
                 </Link>

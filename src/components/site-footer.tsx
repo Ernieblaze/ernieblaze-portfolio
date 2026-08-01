@@ -6,17 +6,17 @@ import { site } from "@/lib/site";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-white/10">
+    <footer className="border-t border-line">
       {/* Marquee of the site's own address — the signature device, one last time */}
       <div
-        className="overflow-hidden border-b border-white/5 py-5"
+        className="overflow-hidden border-b border-line-soft py-5"
         aria-hidden="true"
       >
         <div className="animate-marquee flex w-max gap-10 whitespace-nowrap motion-reduce:animate-none">
           {Array.from({ length: 12 }).map((_, index) => (
             <span
               key={index}
-              className="flex items-center gap-10 font-mono text-sm tracking-wider text-white/10 uppercase"
+              className="flex items-center gap-10 font-mono text-sm tracking-wider text-fg/10 uppercase"
             >
               {site.domain}
               <span className="text-accent/30">/</span>

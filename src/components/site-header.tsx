@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
+import { ThemeToggle } from "@/components/theme-toggle";
 import { site } from "@/lib/site";
 
 export function SiteHeader() {
@@ -34,11 +35,45 @@ export function SiteHeader() {
     };
   }, [menuOpen]);
 
+  /**
+   * Sends the page to a section, instead of leaving it to the browser.
+   *
+   * A plain `href="#about"` inside the mobile menu asks the browser to scroll a
+   * body that is still `overflow: hidden` for the open menu, so the jump is
+   * swallowed and the visitor stays where they were. Closing the menu first and
+   * scrolling on the next frame — once the lock has actually lifted — is what
+   * makes the two agree.
+   *
+   * Falls through to default browser behaviour if the target isn't on this
+   * page, so the links keep working from `/work/[slug]` and without JS.
+   */
+  function goToSection(event: MouseEvent<HTMLAnchorElement>, href: string) {
+    if (!href.startsWith("#")) return;
+    const target = document.getElementById(href.slice(1));
+    if (!target) return;
+
+    event.preventDefault();
+    setMenuOpen(false);
+
+    // Two frames: one for React to unmount the overlay, one for the browser to
+    // apply the restored `overflow` before we ask it to scroll.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        target.scrollIntoView({
+          behavior: reduceMotion ? "auto" : "smooth",
+          block: "start",
+        });
+        // Keep the address bar honest so the section stays linkable.
+        history.replaceState(null, "", href);
+      });
+    });
+  }
+
   return (
     <>
       <a
         href="#work"
-        className="bg-accent focus:ring-accent sr-only rounded-full px-4 py-2 font-medium text-black focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-100"
+        className="bg-accent focus:ring-accent sr-only rounded-full px-4 py-2 font-medium text-on-accent focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-100"
       >
         Skip to work
       </a>
@@ -46,7 +81,7 @@ export function SiteHeader() {
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
           scrolled
-            ? "border-b border-white/10 bg-[#050505]/70 backdrop-blur-xl"
+            ? "border-b border-line bg-ink/70 backdrop-blur-xl"
             : "border-b border-transparent"
         }`}
       >
@@ -71,6 +106,7 @@ export function SiteHeader() {
               <a
                 key={item.href}
                 href={item.href}
+                onClick={(event) => goToSection(event, item.href)}
                 className="text-muted hover:text-accent rounded-full px-4 py-2 font-mono text-xs tracking-wider uppercase transition-colors duration-300"
               >
                 {item.label}
@@ -78,10 +114,13 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <ThemeToggle />
+
             <a
               href="#contact"
-              className="hover:border-accent/60 hover:bg-accent/10 hover:text-accent glass hidden rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-300 hover:shadow-[0_0_28px_-6px_#00f0ff] md:inline-flex"
+              onClick={(event) => goToSection(event, "#contact")}
+              className="hover:border-accent/60 hover:bg-accent/10 hover:text-accent glass hidden rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-300 hover:shadow-[0_0_28px_-6px_var(--glow-strong)] md:inline-flex"
             >
               Start a project
             </a>
@@ -111,7 +150,7 @@ export function SiteHeader() {
             aria-modal="true"
             aria-label="Menu"
           >
-            <div className="grid-field absolute inset-0 bg-[#050505]/95 backdrop-blur-2xl" />
+            <div className="grid-field absolute inset-0 bg-ink/95 backdrop-blur-2xl" />
             <div className="bg-accent/10 absolute -top-40 -right-20 size-[26rem] rounded-full blur-[120px]" />
 
             <div className="relative flex h-full flex-col">
@@ -136,8 +175,8 @@ export function SiteHeader() {
                   <motion.a
                     key={item.href}
                     href={item.href}
-                    onClick={() => setMenuOpen(false)}
-                    className="group flex items-baseline gap-4 border-b border-white/5 py-5"
+                    onClick={(event) => goToSection(event, item.href)}
+                    className="group flex items-baseline gap-4 border-b border-line-soft py-5"
                     initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
                     animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                     transition={{
@@ -157,8 +196,8 @@ export function SiteHeader() {
 
                 <motion.a
                   href="#contact"
-                  onClick={() => setMenuOpen(false)}
-                  className="bg-accent mt-10 rounded-full px-6 py-4 text-center font-medium text-black"
+                  onClick={(event) => goToSection(event, "#contact")}
+                  className="bg-accent mt-10 rounded-full px-6 py-4 text-center font-medium text-on-accent"
                   initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
                   animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                   transition={{ delay: 0.36, duration: 0.5 }}

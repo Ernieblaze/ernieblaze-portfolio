@@ -7,6 +7,7 @@ import { ArrowDown, ArrowUpRight, Mail } from "lucide-react";
 
 import { Magnetic } from "@/components/magnetic-button";
 import { BrowserFrame } from "@/components/browser-frame";
+import { ParticleField } from "@/components/particle-field";
 import { brandIcons } from "@/components/brand-icons";
 import { site } from "@/lib/site";
 import type { Project } from "@/lib/types";
@@ -69,7 +70,14 @@ export function Hero({ projects }: { projects: Project[] }) {
   const active = showcase[typed.index];
 
   return (
-    <section className="relative pt-32 pb-20 sm:pt-40 sm:pb-28" id="top">
+    <section
+      className="relative isolate overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28"
+      id="top"
+    >
+      {/* The one animated background on the site. Fades out at the edges so it
+          reads as atmosphere rather than a boxed-in effect. */}
+      <ParticleField className="-z-10 [mask-image:radial-gradient(80%_75%_at_50%_40%,black,transparent)]" />
+
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-12">
           {/* ------------------------------------------------------- copy */}
@@ -92,11 +100,11 @@ export function Hero({ projects }: { projects: Project[] }) {
             >
               Ernie
               <br />
-              <span className="text-white/35">Blaze</span>
+              <span className="text-fg/35">Blaze</span>
             </motion.h1>
 
             <motion.p
-              className="mt-8 max-w-xl text-lg leading-relaxed text-white/85 text-balance sm:text-xl"
+              className="mt-8 max-w-xl text-lg leading-relaxed text-fg/85 text-balance sm:text-xl"
               initial={reduceMotion ? undefined : { opacity: 0, y: 18 }}
               animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
@@ -122,7 +130,7 @@ export function Hero({ projects }: { projects: Project[] }) {
               <Magnetic>
                 <a
                   href="#work"
-                  className="bg-accent group inline-flex items-center gap-2 rounded-full px-7 py-4 font-medium text-black shadow-[0_0_0_0_#00f0ff] transition-shadow duration-500 hover:shadow-[0_0_44px_-6px_#00f0ff]"
+                  className="bg-accent group inline-flex items-center gap-2 rounded-full px-7 py-4 font-medium text-on-accent shadow-[0_0_0_0_var(--glow-strong)] transition-shadow duration-500 hover:shadow-[0_0_44px_-6px_var(--glow-strong)]"
                 >
                   View my work
                   <ArrowDown
@@ -161,7 +169,7 @@ export function Hero({ projects }: { projects: Project[] }) {
                       href={social.href}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="text-muted hover:border-accent/40 hover:text-accent glass flex size-11 items-center justify-center rounded-full transition-all duration-300 hover:shadow-[0_0_24px_-8px_#00f0ff]"
+                      className="text-muted hover:border-accent/40 hover:text-accent glass flex size-11 items-center justify-center rounded-full transition-all duration-300 hover:shadow-[0_0_24px_-8px_var(--glow-strong)]"
                       aria-label={`${site.name} on ${social.name}`}
                     >
                       <Icon className="size-4" />
@@ -172,7 +180,7 @@ export function Hero({ projects }: { projects: Project[] }) {
               <li>
                 <a
                   href={`mailto:${site.email}`}
-                  className="text-muted hover:border-accent/40 hover:text-accent glass flex size-11 items-center justify-center rounded-full transition-all duration-300 hover:shadow-[0_0_24px_-8px_#00f0ff]"
+                  className="text-muted hover:border-accent/40 hover:text-accent glass flex size-11 items-center justify-center rounded-full transition-all duration-300 hover:shadow-[0_0_24px_-8px_var(--glow-strong)]"
                   aria-label={`Email ${site.name}`}
                 >
                   <Mail className="size-4" aria-hidden="true" />
@@ -191,10 +199,10 @@ export function Hero({ projects }: { projects: Project[] }) {
             {active ? (
               <>
                 <BrowserFrame
-                  className="shadow-[0_40px_120px_-40px_rgba(0,240,255,0.35)]"
+                  className="shadow-[0_40px_120px_-40px_var(--glow-mid)]"
                   address={
                     <span className="flex items-center">
-                      <span className="text-white/70">{typed.text}</span>
+                      <span className="text-fg/70">{typed.text}</span>
                       {!typed.complete && (
                         <span
                           className="bg-accent animate-caret ml-0.5 inline-block h-3 w-[2px] align-middle"
@@ -230,8 +238,8 @@ export function Hero({ projects }: { projects: Project[] }) {
                 {/* Caption ties the frame to the project it is showing */}
                 <div className="mt-4 flex items-center justify-between gap-4">
                   <p className="text-muted min-w-0 truncate text-sm">
-                    <span className="text-white">{active.title}</span>
-                    <span className="mx-2 text-white/20">/</span>
+                    <span className="text-fg">{active.title}</span>
+                    <span className="mx-2 text-fg/20">/</span>
                     {active.category}
                   </p>
                   <a
@@ -254,13 +262,13 @@ export function Hero({ projects }: { projects: Project[] }) {
 
         {/* Stats strip */}
         <motion.dl
-          className="mt-20 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-3"
+          className="mt-20 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3"
           initial={reduceMotion ? undefined : { opacity: 0 }}
           animate={reduceMotion ? undefined : { opacity: 1 }}
           transition={{ duration: 0.9, delay: 0.5 }}
         >
           {site.stats.map((stat) => (
-            <div key={stat.label} className="bg-[#050505]/80 px-6 py-7">
+            <div key={stat.label} className="bg-ink/80 px-6 py-7">
               <dt className="text-muted font-mono text-xs tracking-wider uppercase">
                 {stat.label}
               </dt>

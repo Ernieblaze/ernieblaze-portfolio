@@ -7,7 +7,7 @@ import { site } from "@/lib/site";
 
 export function About() {
   return (
-    <section id="about" className="scroll-mt-24 py-24 sm:py-32">
+    <section id="about" className="py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading route="/about" title={site.about.heading} />
 
@@ -52,7 +52,7 @@ export function About() {
                   <p
                     className={
                       index === 0
-                        ? "text-xl leading-relaxed text-white/90"
+                        ? "text-xl leading-relaxed text-fg/90"
                         : "text-muted leading-relaxed"
                     }
                   >

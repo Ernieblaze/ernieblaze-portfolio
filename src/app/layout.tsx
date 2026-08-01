@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 
 import { site } from "@/lib/site";
+import { themeInitScript } from "@/lib/theme";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -64,8 +65,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#050505",
-  colorScheme: "dark",
+  // Matches whichever palette the visitor lands on, so browser chrome on
+  // mobile blends with the page instead of fighting it.
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#050505" },
+    { media: "(prefers-color-scheme: light)", color: "#f4f7f9" },
+  ],
+  colorScheme: "dark light",
 };
 
 export default function RootLayout({
@@ -74,9 +80,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      // `data-theme` is set by the script below before the first paint, so it
+      // legitimately differs from what the server rendered.
+      suppressHydrationWarning
       className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} h-full`}
     >
-      <body className="bg-ink min-h-full text-white">{children}</body>
+      <head>
+        {/* Must run before anything renders, or the page flashes the wrong
+            palette. Inline and synchronous is the point. */}
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body className="bg-ink text-fg min-h-full">{children}</body>
     </html>
   );
 }

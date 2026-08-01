@@ -133,7 +133,7 @@ export function ImageUploader({
         {images.map((src, index) => (
           <div
             key={src}
-            className="group relative aspect-16/10 overflow-hidden rounded-xl border border-white/10"
+            className="group relative aspect-16/10 overflow-hidden rounded-xl border border-line"
           >
             <Image
               src={src}
@@ -143,7 +143,7 @@ export function ImageUploader({
               className="object-cover object-top"
             />
             {index === 0 ? (
-              <span className="bg-accent absolute top-1.5 left-1.5 rounded px-1.5 py-0.5 font-mono text-[10px] font-medium text-black">
+              <span className="bg-accent absolute top-1.5 left-1.5 rounded px-1.5 py-0.5 font-mono text-[10px] font-medium text-on-accent">
                 COVER
               </span>
             ) : null}
@@ -163,7 +163,7 @@ export function ImageUploader({
             type="button"
             onClick={() => inputRef.current?.click()}
             disabled={uploading}
-            className="text-muted hover:border-accent/50 hover:text-accent flex aspect-16/10 flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-white/15 bg-white/[0.02] transition-colors disabled:opacity-60"
+            className="text-muted hover:border-accent/50 hover:text-accent flex aspect-16/10 flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-line bg-surface transition-colors disabled:opacity-60"
           >
             {uploading ? (
               <Loader2 className="size-5 animate-spin" aria-hidden="true" />
