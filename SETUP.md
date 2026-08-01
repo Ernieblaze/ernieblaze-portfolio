@@ -104,9 +104,24 @@ is written in the README, so anyone could read it and sign into your dashboard.
 ### 4 of 4
 ```
 Key:    ADMIN_SESSION_SECRET
-Value:  69c4b8b01dae939f07e7bf1ebdbbc8a91624392fdaacf20c8646594d519c364b
+Value:  <64 hex characters — generate your own, see below>
 ```
-This one just signs your login cookie. It doesn't need to be memorable.
+This one signs your login cookie: it's what proves to the server that a cookie
+it received is genuine and wasn't forged. It doesn't need to be memorable, but
+it does need to be secret.
+
+Generate one with:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+⚠️ **Never write the value into this file, or any file in the repo.** This repo
+is public, so anything committed here is readable by everyone — and deleting it
+later doesn't help, because the old commit still contains it. A secret that has
+been committed is burnt: the only fix is to generate a new one and replace it in
+Vercel. Environment variables exist precisely so secrets live somewhere the code
+doesn't.
 
 **Watch out for:** a trailing space or line break when pasting. That's the most
 common cause of "I set it but it still doesn't work."

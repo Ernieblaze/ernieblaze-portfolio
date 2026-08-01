@@ -135,6 +135,11 @@ that JSON file changes nothing.
 The password is read from `ADMIN_PASSWORD`, falling back to `ernieblaze2026` if
 it isn't set.
 
+> **Set it in every environment.** That fallback is written here, in a public
+> repo, so anywhere `ADMIN_PASSWORD` is missing the dashboard password is
+> effectively published. It exists for a first local run, not for anything
+> reachable from the internet.
+
 ```bash
 # .env.local
 ADMIN_PASSWORD=something-only-you-know
@@ -175,19 +180,42 @@ needed.
 ### Design system
 
 Tailwind v4 has no `tailwind.config.js`. Everything is declared in
-`src/app/globals.css`:
+`src/app/globals.css`.
 
-| Token | Value |
-| --- | --- |
-| Background | `#050505` (`bg-ink`) |
-| Surface | `.glass` — `bg-white/5` + `backdrop-blur-xl` + `border-white/10` |
-| Accent | `#00f0ff` (`text-accent`, `bg-accent`) |
-| Text | `#ffffff` / `#a1a1aa` (`text-muted`) |
-| Display | Space Grotesk (`font-display`) |
-| Body | Inter (`font-sans`) |
-| Mono | JetBrains Mono (`font-mono`) |
+There are **two palettes and one set of tokens**. Components reference the
+semantic name, never a raw colour, so the theme is swapped by changing values in
+one file — and there is no `dark:` variant anywhere in the markup.
 
-Custom utilities: `.glass`, `.grid-field`, `.route-label`.
+| Token | Dark | Light |
+| --- | --- | --- |
+| Background (`bg-ink`) | `#050505` | `#f4f7f9` |
+| Raised (`bg-ink-raised`) | `#0e0e11` | `#ffffff` |
+| Text (`text-fg`) | `#ffffff` | `#071216` |
+| Muted (`text-muted`) | `#a1a1aa` | `#52666e` |
+| Accent (`text-accent`) | `#00f0ff` | `#0b7285` |
+| On accent (`text-on-accent`) | `#04161a` | `#ffffff` |
+
+Type is the same in both: Space Grotesk (`font-display`), Inter (`font-sans`),
+JetBrains Mono (`font-mono`).
+
+Custom utilities: `.glass`, `.lift`, `.grid-field`, `.route-label`,
+`.glow-hover`, `.glow-card`.
+
+The theme is resolved **before first paint** by a small inline script
+(`src/lib/theme.ts`, injected in `src/app/layout.tsx`), which is what stops the
+page flashing the wrong palette on load. No stored choice means the device
+preference wins, and keeps winning until the visitor picks explicitly with the
+header toggle.
+
+### Section navigation
+
+`scroll-padding-top` on `html` is the **single** source of truth for where an
+anchor lands. Do not also add `scroll-mt-*` to a section — the two stack, and
+every jump lands twice as far down as intended. The header additionally
+intercepts nav clicks (`goToSection` in `src/components/site-header.tsx`) so the
+mobile menu closes and releases its scroll lock *before* the scroll runs;
+without that ordering the browser is asked to scroll a locked body and the jump
+is silently swallowed. `nav-test.mjs` measures all of this.
 
 The signature device is **browser chrome**. `BrowserFrame` wraps the hero
 showcase, every project card, and every case study image, so work is always
@@ -204,8 +232,15 @@ animation to become visible.
 ```bash
 npm run build         # types, lint, prerender
 npm run test:smoke    # end-to-end admin flow, needs a server on :3117
+npm run test:nav      # anchor navigation, desktop + mobile; BASE=<url>
+npm run test:theme    # light/dark: device preference, toggle, no flash
 npm run screenshots   # writes ./shots for a visual pass
 ```
+
+`test:nav` clicks every nav link at both breakpoints and prints where each
+section lands relative to the viewport top. All eight should report
+`sectionTop: 88` — matching `scroll-padding-top`. Anything else means the double
+offset described under [Section navigation](#section-navigation) is back.
 
 `test:smoke` signs in, creates a project with an upload, checks it reaches the
 public site, edits it, checks that `javascript:` URLs and unauthenticated writes
@@ -250,7 +285,21 @@ same Supabase project unless you point previews at a second one.
 
 Public pages are statically rendered and revalidated on demand: saving in the
 dashboard calls `revalidatePath`, so new work appears immediately without a
-rebuild. Project pages not yet generated are rendered on first request.
+rebuild. Project pages not yet generated are rendered on first request and
+cached from then on.
+
+The build itself never needs the database. `getPublishedProjectsSafe` returns an
+empty list instead of throwing, and `/work/[slug]` declares an empty
+`generateStaticParams`, so a missing key or an unreachable Supabase produces a
+site with no projects rather than a failed deploy. That guarantee is why these
+pages do **not** need `force-dynamic` — which only moved the database round trip
+onto every visitor.
+
+### Region
+
+Supabase is in Frankfurt, so Vercel's **Function Region must be `fra1`**
+(Settings → Functions). Left on the Washington DC default, every uncached render
+crosses the Atlantic twice before it can return a page.
 
 ---
 
