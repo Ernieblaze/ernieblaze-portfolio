@@ -91,9 +91,14 @@ export function isValidSessionToken(token: string | undefined): boolean {
  * every write, which is the behaviour that matters.
  */
 export async function isAuthenticated(): Promise<boolean> {
+  // `cookies()` stays outside the try. Next signals "this route is dynamic" by
+  // throwing from it during prerender, and swallowing that would let a page
+  // that depends on a session be statically rendered as signed-out.
+  const store = await cookies();
+  const token = store.get(SESSION_COOKIE)?.value;
+
   try {
-    const store = await cookies();
-    return isValidSessionToken(store.get(SESSION_COOKIE)?.value);
+    return isValidSessionToken(token);
   } catch (error) {
     console.error("[auth] Could not verify the session:", error);
     return false;
