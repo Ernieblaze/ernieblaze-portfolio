@@ -68,7 +68,7 @@ export function About() {
                 {site.skills.map((skill) => (
                   <li
                     key={skill}
-                    className="border-accent/25 text-accent/90 hover:border-accent/60 hover:bg-accent/10 rounded-full border px-4 py-2 font-mono text-xs transition-colors duration-300"
+                    className="border-accent/25 text-accent/90 hover:border-accent/60 hover:bg-accent-vivid/10 rounded-full border px-4 py-2 font-mono text-xs transition-colors duration-300"
                   >
                     {skill}
                   </li>

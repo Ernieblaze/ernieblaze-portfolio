@@ -73,7 +73,7 @@ export function SiteHeader() {
     <>
       <a
         href="#work"
-        className="bg-accent focus:ring-accent sr-only rounded-full px-4 py-2 font-medium text-on-accent focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-100"
+        className="bg-accent-vivid focus:ring-accent sr-only rounded-full px-4 py-2 font-medium text-on-accent focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-100"
       >
         Skip to work
       </a>
@@ -95,7 +95,7 @@ export function SiteHeader() {
               {site.name}
             </span>
             <span
-              className="bg-accent animate-pulse-dot size-1.5 rounded-full"
+              className="bg-accent-vivid animate-pulse-dot size-1.5 rounded-full"
               aria-hidden="true"
             />
           </Link>
@@ -120,7 +120,7 @@ export function SiteHeader() {
             <a
               href="#contact"
               onClick={(event) => goToSection(event, "#contact")}
-              className="hover:border-accent/60 hover:bg-accent/10 hover:text-accent glass hidden rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-300 hover:shadow-[0_0_28px_-6px_var(--glow-strong)] md:inline-flex"
+              className="hover:border-accent/60 hover:bg-accent-vivid/10 hover:text-accent glass hidden rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-300 hover:shadow-[0_0_28px_-6px_var(--glow-strong)] md:inline-flex"
             >
               Start a project
             </a>
@@ -204,7 +204,7 @@ export function SiteHeader() {
                 <motion.a
                   href="#contact"
                   onClick={(event) => goToSection(event, "#contact")}
-                  className="bg-accent mt-10 rounded-full px-6 py-4 text-center font-medium text-on-accent"
+                  className="bg-accent-vivid mt-10 rounded-full px-6 py-4 text-center font-medium text-on-accent"
                   initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
                   animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                   transition={{ delay: 0.36, duration: 0.5 }}

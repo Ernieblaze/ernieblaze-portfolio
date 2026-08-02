@@ -272,7 +272,7 @@ export function ProjectForm({ project, onSaved, onCancel }: ProjectFormProps) {
         <button
           type="submit"
           disabled={busy}
-          className="bg-accent inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium text-on-accent transition-shadow duration-500 hover:shadow-[0_0_40px_-8px_var(--glow-strong)] disabled:opacity-60"
+          className="bg-accent-vivid inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium text-on-accent transition-shadow duration-500 hover:shadow-[0_0_40px_-8px_var(--glow-strong)] disabled:opacity-60"
         >
           {busy ? (
             <>

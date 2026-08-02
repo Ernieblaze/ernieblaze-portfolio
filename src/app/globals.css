@@ -20,6 +20,13 @@
   --muted: #a1a1aa;
   --accent: #00f0ff;
   --accent-hover: #7df6ff;
+  /*
+   * The brand cyan at full strength, for fills, glows and dots — anything the
+   * eye reads as colour rather than as words. On dark it is the same as
+   * `--accent`; on light the two part company, because #00f0ff on off-white is
+   * about 1.4:1 and disappears the moment it becomes text.
+   */
+  --accent-vivid: #00f0ff;
   --on-accent: #04161a;
 
   --glass-fill: rgb(255 255 255 / 0.05);
@@ -43,10 +50,12 @@
   --glow-mid: rgb(0 240 255 / 0.35);
   --glow-strong: rgb(0 240 255 / 0.55);
 
-  /* Particle field in the hero */
+  /* Particle field in the hero — softer and sparser than light mode, where a
+     glowing cyan dot on near-black already carries further than it should. */
   --particle: 0 240 255;
-  --particle-opacity: 0.75;
-  --particle-link-opacity: 0.16;
+  --particle-opacity: 0.6;
+  --particle-link-opacity: 0.12;
+  --particle-density: 0.8;
 
   color-scheme: dark;
 }
@@ -56,9 +65,17 @@
   --bg-raised: #ffffff;
   --fg: #071216;
   --muted: #52666e;
-  --accent: #0b7285;
-  --accent-hover: #095c6b;
-  --on-accent: #ffffff;
+  /*
+   * Text-safe cyan: ~5.3:1 on the background, so eyebrows, links and small
+   * mono labels stay legible. This is the one the `text-accent` utility uses.
+   */
+  --accent: #06687a;
+  --accent-hover: #04566a;
+  /* The brand cyan, unchanged — buttons, glows, particles, the pulse dot. */
+  --accent-vivid: #00f0ff;
+  /* Dark ink on a cyan fill reads at ~13:1, and keeps buttons electric in
+     both themes rather than going navy-on-white in one of them. */
+  --on-accent: #04161a;
 
   --glass-fill: rgb(255 255 255 / 0.72);
   --glass-fill-solid: rgb(255 255 255 / 0.94);
@@ -76,14 +93,21 @@
     0 1px 2px rgb(7 18 22 / 0.04),
     0 12px 32px -16px rgb(7 18 22 / 0.14);
 
-  /* Light needs a tighter, cooler bloom or it turns to haze */
-  --glow-soft: rgb(11 114 133 / 0.1);
-  --glow-mid: rgb(11 114 133 / 0.18);
-  --glow-strong: rgb(11 114 133 / 0.3);
+  /* Cyan blooms, so light mode still reads as the same brand — pitched a
+     little deeper than the fill colour, because pure #00f0ff spread over
+     off-white turns to pale haze rather than glow. */
+  --glow-soft: rgb(0 190 216 / 0.2);
+  --glow-mid: rgb(0 176 202 / 0.32);
+  --glow-strong: rgb(0 158 184 / 0.45);
 
-  --particle: 11 114 133;
-  --particle-opacity: 0.68;
-  --particle-link-opacity: 0.2;
+  /* Particles are the feature in light mode: deeper, denser and more opaque
+     than on dark, where the same treatment would glare. */
+  --particle: 6 122 142;
+  --particle-opacity: 0.85;
+  /* The dots carry this, not the lines. Much above this and the mesh resolves
+     into visible triangles — a network diagram rather than atmosphere. */
+  --particle-link-opacity: 0.16;
+  --particle-density: 1.15;
 
   color-scheme: light;
 }
@@ -95,6 +119,7 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
+  --color-accent-vivid: var(--accent-vivid);
   --color-on-accent: var(--on-accent);
   --color-line: var(--line);
   --color-line-soft: var(--line-soft);

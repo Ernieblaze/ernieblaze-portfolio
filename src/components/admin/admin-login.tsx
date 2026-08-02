@@ -83,7 +83,7 @@ export function AdminLogin() {
           <button
             type="submit"
             disabled={busy}
-            className="bg-accent mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-medium text-on-accent transition-shadow duration-500 hover:shadow-[0_0_40px_-8px_var(--glow-strong)] disabled:opacity-60"
+            className="bg-accent-vivid mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-medium text-on-accent transition-shadow duration-500 hover:shadow-[0_0_40px_-8px_var(--glow-strong)] disabled:opacity-60"
           >
             {busy ? (
               <>

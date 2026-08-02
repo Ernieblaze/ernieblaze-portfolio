@@ -113,7 +113,7 @@ export function ImageUploader({
           type="button"
           onClick={handleCapture}
           disabled={capturing || uploading}
-          className="border-accent/30 text-accent hover:border-accent/60 hover:bg-accent/10 mb-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-dashed px-4 py-3 text-sm font-medium transition-colors disabled:opacity-60"
+          className="border-accent/30 text-accent hover:border-accent/60 hover:bg-accent-vivid/10 mb-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-dashed px-4 py-3 text-sm font-medium transition-colors disabled:opacity-60"
         >
           {capturing ? (
             <>
@@ -143,7 +143,7 @@ export function ImageUploader({
               className="object-cover object-top"
             />
             {index === 0 ? (
-              <span className="bg-accent absolute top-1.5 left-1.5 rounded px-1.5 py-0.5 font-mono text-[10px] font-medium text-on-accent">
+              <span className="bg-accent-vivid absolute top-1.5 left-1.5 rounded px-1.5 py-0.5 font-mono text-[10px] font-medium text-on-accent">
                 COVER
               </span>
             ) : null}

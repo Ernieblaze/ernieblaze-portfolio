@@ -57,7 +57,7 @@ export function Services() {
             </p>
             <a
               href="#contact"
-              className="text-accent hover:text-accent-dim mt-6 inline-flex font-mono text-xs tracking-wider uppercase transition-colors"
+              className="text-accent hover:text-accent-hover mt-6 inline-flex font-mono text-xs tracking-wider uppercase transition-colors"
             >
               Ask a question →
             </a>

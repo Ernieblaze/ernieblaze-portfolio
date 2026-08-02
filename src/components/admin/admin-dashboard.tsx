@@ -102,7 +102,7 @@ export function AdminDashboard({ projects }: { projects: Project[] }) {
             <button
               type="button"
               onClick={() => setPanel({ mode: "new" })}
-              className="bg-accent inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium text-on-accent transition-shadow duration-500 hover:shadow-[0_0_40px_-8px_var(--glow-strong)]"
+              className="bg-accent-vivid inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium text-on-accent transition-shadow duration-500 hover:shadow-[0_0_40px_-8px_var(--glow-strong)]"
             >
               <Plus className="size-4" aria-hidden="true" />
               Add project
@@ -152,7 +152,7 @@ export function AdminDashboard({ projects }: { projects: Project[] }) {
                   <span
                     className={`rounded-full px-2 py-0.5 font-mono text-[10px] tracking-wider uppercase ${
                       project.published
-                        ? "bg-accent/15 text-accent"
+                        ? "bg-accent-vivid/15 text-accent"
                         : "text-muted bg-line"
                     }`}
                   >
@@ -216,7 +216,7 @@ export function AdminDashboard({ projects }: { projects: Project[] }) {
             <button
               type="button"
               onClick={() => setPanel({ mode: "new" })}
-              className="bg-accent mt-6 inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium text-on-accent"
+              className="bg-accent-vivid mt-6 inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium text-on-accent"
             >
               <Plus className="size-4" aria-hidden="true" />
               Add project

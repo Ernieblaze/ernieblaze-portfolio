@@ -19,7 +19,7 @@ export function SectionHeading({
   return (
     <Reveal className={align === "center" ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
       <p className="route-label flex items-center gap-3">
-        <span className="bg-accent/40 h-px w-8" aria-hidden="true" />
+        <span className="bg-accent-vivid/40 h-px w-8" aria-hidden="true" />
         {route}
       </p>
       <h2 className="font-display mt-5 text-section font-bold text-balance">{title}</h2>

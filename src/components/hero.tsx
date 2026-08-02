@@ -62,7 +62,7 @@ function TypedAddress({ value, enabled }: { value: string; enabled: boolean }) {
       <span className="text-fg/70">{value.slice(0, chars)}</span>
       {!complete && (
         <span
-          className="bg-accent animate-caret ml-0.5 inline-block h-3 w-[2px] align-middle"
+          className="bg-accent-vivid animate-caret ml-0.5 inline-block h-3 w-[2px] align-middle"
           aria-hidden="true"
         />
       )}
@@ -126,7 +126,7 @@ export function Hero({ projects }: { projects: Project[] }) {
               animate={reduceMotion ? undefined : { opacity: 1 }}
               transition={{ duration: 0.6 }}
             >
-              <span className="bg-accent animate-pulse-dot size-1.5 rounded-full" />
+              <span className="bg-accent-vivid animate-pulse-dot size-1.5 rounded-full" />
               {site.availability.label}
             </motion.p>
 
@@ -168,7 +168,7 @@ export function Hero({ projects }: { projects: Project[] }) {
               <Magnetic>
                 <a
                   href="#work"
-                  className="bg-accent group inline-flex items-center gap-2 rounded-full px-7 py-4 font-medium text-on-accent shadow-[0_0_0_0_var(--glow-strong)] transition-shadow duration-500 hover:shadow-[0_0_44px_-6px_var(--glow-strong)]"
+                  className="bg-accent-vivid group inline-flex items-center gap-2 rounded-full px-7 py-4 font-medium text-on-accent shadow-[0_0_0_0_var(--glow-strong)] transition-shadow duration-500 hover:shadow-[0_0_44px_-6px_var(--glow-strong)]"
                 >
                   View my work
                   <ArrowDown
@@ -277,7 +277,7 @@ export function Hero({ projects }: { projects: Project[] }) {
                   </p>
                   <a
                     href={`#${active.slug}`}
-                    className="text-accent hover:text-accent-dim shrink-0 font-mono text-xs tracking-wider uppercase transition-colors"
+                    className="text-accent hover:text-accent-hover shrink-0 font-mono text-xs tracking-wider uppercase transition-colors"
                   >
                     See the build
                   </a>

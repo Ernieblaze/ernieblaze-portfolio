@@ -188,7 +188,7 @@ export function ProjectModal({
                   href={project.liveUrl}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="bg-accent inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-medium text-on-accent transition-shadow duration-500 hover:shadow-[0_0_44px_-6px_var(--glow-strong)]"
+                  className="bg-accent-vivid inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-medium text-on-accent transition-shadow duration-500 hover:shadow-[0_0_44px_-6px_var(--glow-strong)]"
                 >
                   Visit {hostname(project.liveUrl)}
                   <ArrowUpRight className="size-4" aria-hidden="true" />

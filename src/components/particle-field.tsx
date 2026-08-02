@@ -51,6 +51,8 @@ function readTheme() {
     rgb: styles.getPropertyValue("--particle").trim() || "0 240 255",
     dotAlpha: Number(styles.getPropertyValue("--particle-opacity")) || 0.7,
     linkAlpha: Number(styles.getPropertyValue("--particle-link-opacity")) || 0.15,
+    // Light mode carries more of them; on dark the same count reads as noise.
+    density: Number(styles.getPropertyValue("--particle-density")) || 1,
   };
 }
 
@@ -97,10 +99,13 @@ export function ParticleField({ className = "" }: { className?: string }) {
       // desktop gets a field — without either looking sparse or soupy. Phones
       // are thinned further: fewer, slightly larger dots read better small and
       // cost less per frame.
-      const density = narrow ? 22000 : 13000;
+      const area = narrow ? 22000 : 13000;
       const target = Math.min(
         MAX_PARTICLES,
-        Math.max(narrow ? 12 : 18, Math.round((width * height) / density)),
+        Math.max(
+          narrow ? 12 : 18,
+          Math.round(((width * height) / area) * theme.density),
+        ),
       );
 
       particles = Array.from({ length: target }, () => ({
@@ -268,6 +273,10 @@ export function ParticleField({ className = "" }: { className?: string }) {
 
     const onThemeChange = () => {
       theme = readTheme();
+      // Density is part of the theme, so the field is rebuilt rather than
+      // recoloured — switching to light adds particles, switching back thins
+      // them out again.
+      resize();
       if (!running) draw();
     };
 

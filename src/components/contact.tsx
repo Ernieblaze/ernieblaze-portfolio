@@ -52,7 +52,7 @@ export function Contact() {
             <div className="glass rounded-2xl p-6 sm:p-8">
               {sent ? (
                 <div className="flex flex-col items-start gap-5 py-6">
-                  <span className="bg-accent/15 text-accent flex size-12 items-center justify-center rounded-full">
+                  <span className="bg-accent-vivid/15 text-accent flex size-12 items-center justify-center rounded-full">
                     <Check className="size-5" aria-hidden="true" />
                   </span>
                   <div>
@@ -139,7 +139,7 @@ export function Contact() {
                   <Magnetic>
                     <button
                       type="submit"
-                      className="bg-accent group inline-flex items-center gap-2 rounded-full px-7 py-4 font-medium text-on-accent transition-shadow duration-500 hover:shadow-[0_0_44px_-6px_var(--glow-strong)]"
+                      className="bg-accent-vivid group inline-flex items-center gap-2 rounded-full px-7 py-4 font-medium text-on-accent transition-shadow duration-500 hover:shadow-[0_0_44px_-6px_var(--glow-strong)]"
                     >
                       Send message
                       <Send
@@ -202,7 +202,7 @@ export function Contact() {
               <div className="border-accent/25 from-accent/10 mt-auto rounded-2xl border bg-gradient-to-br to-transparent p-6">
                 <p className="flex items-center gap-2.5 font-mono text-xs tracking-wider uppercase">
                   <span
-                    className="bg-accent animate-pulse-dot size-2 rounded-full"
+                    className="bg-accent-vivid animate-pulse-dot size-2 rounded-full"
                     aria-hidden="true"
                   />
                   <span className="text-accent">{site.availability.label}</span>
