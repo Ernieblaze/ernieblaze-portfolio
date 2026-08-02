@@ -7,7 +7,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Work } from "@/components/work";
 import { getPublishedProjectsSafe } from "@/lib/projects";
-import { site } from "@/lib/site";
+import { getSiteContentSafe } from "@/lib/site-content";
 
 /**
  * Prerendered and cached, so a visitor is never the one waiting on Supabase.
@@ -25,34 +25,39 @@ import { site } from "@/lib/site";
 export const revalidate = 300;
 
 export default async function Home() {
-  const projects = await getPublishedProjectsSafe();
+  // Both degrade to defaults rather than throwing, so a database problem shows
+  // an emptier page instead of an error one.
+  const [projects, content] = await Promise.all([
+    getPublishedProjectsSafe(),
+    getSiteContentSafe(),
+  ]);
 
   // Structured data so search results and rich previews name the right person.
   const personSchema = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: site.name,
-    url: site.url,
-    email: `mailto:${site.email}`,
-    jobTitle: site.role,
-    sameAs: site.socials.map((social) => social.href),
-    knowsAbout: site.skills,
+    name: content.name,
+    url: content.url,
+    email: `mailto:${content.email}`,
+    jobTitle: content.role,
+    sameAs: content.socials.map((social) => social.href),
+    knowsAbout: content.skills,
   };
 
   return (
     <>
       <Ambient />
-      <SiteHeader />
+      <SiteHeader content={content} />
 
       <main>
-        <Hero projects={projects} />
+        <Hero projects={projects} content={content} />
         <Work projects={projects} />
-        <About />
-        <Services />
-        <Contact />
+        <About content={content} />
+        <Services content={content} />
+        <Contact content={content} />
       </main>
 
-      <SiteFooter />
+      <SiteFooter content={content} />
 
       <script
         type="application/ld+json"

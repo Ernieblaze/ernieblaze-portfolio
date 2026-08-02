@@ -31,3 +31,49 @@ export type ProjectInput = Omit<
 > & {
   slug?: string;
 };
+
+/**
+ * Every piece of hand-written copy on the public site.
+ *
+ * `src/lib/site.ts` holds the defaults; the dashboard saves overrides to
+ * Supabase and `getSiteContentSafe` merges the two. Nothing here is required to
+ * exist in the database — a missing field falls back to the default, which is
+ * what keeps a half-filled form from emptying the site.
+ */
+export type SiteContent = {
+  name: string;
+  domain: string;
+  url: string;
+  role: string;
+  email: string;
+  location: string;
+
+  tagline: string;
+  /** Shown under the hero headline. Two sentences, no more. */
+  heroSupport: string;
+
+  availability: {
+    open: boolean;
+    label: string;
+    detail: string;
+  };
+
+  about: {
+    heading: string;
+    paragraphs: string[];
+    photo: string | null;
+    photoAlt: string;
+  };
+
+  skills: string[];
+  stats: { value: string; label: string }[];
+  services: {
+    title: string;
+    description: string;
+    deliverables: string[];
+  }[];
+  socials: { name: string; handle: string; href: string }[];
+
+  /** Structural, not content — the hrefs must match the section ids. */
+  nav: { label: string; href: string }[];
+};

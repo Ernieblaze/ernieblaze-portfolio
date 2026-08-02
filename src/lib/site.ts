@@ -1,9 +1,15 @@
-/**
- * Every piece of hand-written copy on the public site lives here.
- * Edit this file to make the site yours — no component changes needed.
- */
+import type { SiteContent } from "./types";
 
-export const site = {
+/**
+ * Default copy for the public site.
+ *
+ * These are the fallbacks, not the live values. The dashboard writes overrides
+ * to Supabase and `getSiteContentSafe` merges them over this object, so an
+ * unreachable database or an untouched field still renders real content rather
+ * than a blank section. Editing this file changes what a fresh install starts
+ * with — to change the running site, use /admin.
+ */
+export const site: SiteContent = {
   name: "Ernie Blaze",
   domain: "ernieblaze.dev",
   url: "https://ernieblaze.dev",
@@ -33,7 +39,7 @@ export const site = {
       "Most projects run two to four weeks. If a template genuinely serves you better than a custom build, I'll tell you that before you pay me anything.",
     ],
     /** Drop a real photo at public/ernie.jpg and set this to "/ernie.jpg". */
-    photo: null as string | null,
+    photo: null,
     photoAlt: "Ernie Blaze",
   },
 
@@ -113,6 +119,6 @@ export const site = {
     { label: "Services", href: "#services" },
     { label: "Contact", href: "#contact" },
   ],
-} as const;
+};
 
-export type Site = typeof site;
+export type Site = SiteContent;

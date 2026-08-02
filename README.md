@@ -44,9 +44,10 @@ Do this once, before the first run.
 → New project. Any region near your visitors.
 
 **2. Create the tables and bucket.** SQL Editor → New query → paste all of
-`supabase/schema.sql` → Run. It creates the `projects` table, its indexes, the
-`project-images` storage bucket, and read-only RLS policies. It's idempotent, so
-re-running is safe.
+`supabase/schema.sql` → Run. It creates the `projects` and `site_content`
+tables, their indexes, the `project-images` storage bucket, and read-only RLS
+policies. It's idempotent, so re-running is safe — and you must re-run it after
+pulling a change that adds a table.
 
 **3. Copy the credentials.** Project Settings → API Keys:
 
@@ -116,6 +117,7 @@ project also deletes its uploaded screenshots.
 | What | Where |
 | --- | --- |
 | Project records | Supabase → `public.projects` |
+| Site copy | Supabase → `public.site_content` (one JSON row) |
 | Uploaded screenshots | Supabase Storage → `project-images` bucket |
 | Placeholder seed data | `data/projects.json` + `public/seed/` (repo only) |
 
@@ -164,16 +166,28 @@ production" before putting anything sensitive behind it.
 
 ## Make it yours
 
-Almost all copy lives in **`src/lib/site.ts`** — name, tagline, bio, skills,
-stats, services, social links, email. Edit that file; no component changes
-needed.
+**Edit your copy at `/admin` → Site content.** Name, role, email, location,
+hero headline, availability badge, stats, the whole About section, skills,
+services and social links — all editable from the dashboard, no deploy needed.
+Saving calls `revalidatePublicPages()`, so changes are live immediately.
 
-- **Photo:** drop a portrait at `public/ernie.jpg`, then set
-  `about.photo: "/ernie.jpg"` in `src/lib/site.ts`. Until then the About section
-  shows a labelled placeholder.
-- **Social links:** the handles in `site.socials` are placeholders
-  (`@ernieblaze` and friends). Replace them with real profiles.
-- **Domain:** `site.url` feeds canonical URLs, the sitemap, and Open Graph tags.
+`src/lib/site.ts` holds the **defaults** behind that. They are what a fresh
+install starts with, and what renders for any field the dashboard hasn't set —
+so a cleared field falls back to sensible copy rather than blanking a section.
+Editing the file changes the fallback, not the running site.
+
+Under the hood: a single `site_content` row in Supabase holding JSON, merged
+over the defaults by `getSiteContentSafe()`. JSON rather than a column per
+field, because copy changes shape and a migration per wording change is a tax
+nobody pays twice — validation lives in `validateSiteContent` instead.
+
+- **Photo:** upload it under Site content → About. Until you do, the About
+  section shows a labelled placeholder.
+- **Social links:** the defaults are placeholders (`@ernieblaze` and friends).
+  Replace them under Site content → Social links. Unrecognised network names
+  get a generic link icon rather than disappearing.
+- **Domain:** the site URL feeds canonical URLs, the sitemap, and Open Graph
+  tags. It is under Site content → Your details.
 - **Seed projects:** the four in `data/projects.json` use `.example.com` URLs and
   the art in `public/seed`. Delete them once real work is up.
 

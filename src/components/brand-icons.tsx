@@ -40,8 +40,42 @@ export function LinkedInIcon(props: IconProps) {
   );
 }
 
+/** Generic mark for any network we don't have a logo for. */
+export function LinkIcon(props: IconProps) {
+  return (
+    <svg
+      {...base}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+    </svg>
+  );
+}
+
 export const brandIcons = {
   X: XIcon,
   GitHub: GitHubIcon,
   LinkedIn: LinkedInIcon,
 } as const;
+
+/**
+ * Picks the mark for a network name.
+ *
+ * The name is typed by hand in the dashboard now, so it can be anything —
+ * "twitter", "Instagram", a typo. Matching is case-insensitive and anything
+ * unrecognised falls back to a generic link glyph, because a social row that
+ * renders nothing at all looks like a broken site rather than a missing logo.
+ */
+export function brandIcon(name: string) {
+  const key = name.trim().toLowerCase();
+  if (key === "x" || key === "twitter") return XIcon;
+  if (key === "github") return GitHubIcon;
+  if (key === "linkedin") return LinkedInIcon;
+  return LinkIcon;
+}

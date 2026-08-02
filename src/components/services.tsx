@@ -1,8 +1,8 @@
 import { Reveal } from "@/components/reveal";
 import { SectionHeading } from "@/components/section-heading";
-import { site } from "@/lib/site";
+import type { SiteContent } from "@/lib/types";
 
-export function Services() {
+export function Services({ content }: { content: SiteContent }) {
   return (
     <section id="services" className="py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
@@ -13,7 +13,7 @@ export function Services() {
         />
 
         <ul className="mt-14 grid gap-4 sm:mt-16 sm:grid-cols-2 lg:grid-cols-3">
-          {site.services.map((service, index) => (
+          {content.services.map((service, index) => (
             <Reveal
               as="li"
               key={service.title}

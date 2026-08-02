@@ -13,6 +13,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
  */
 
 export const PROJECTS_TABLE = "projects";
+export const SITE_CONTENT_TABLE = "site_content";
 export const IMAGE_BUCKET = "project-images";
 
 let client: SupabaseClient | null = null;

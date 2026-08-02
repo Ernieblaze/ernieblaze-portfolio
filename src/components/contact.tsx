@@ -6,13 +6,13 @@ import { ArrowUpRight, Check, Mail, Send } from "lucide-react";
 import { Magnetic } from "@/components/magnetic-button";
 import { Reveal } from "@/components/reveal";
 import { SectionHeading } from "@/components/section-heading";
-import { brandIcons } from "@/components/brand-icons";
-import { site } from "@/lib/site";
+import { brandIcon } from "@/components/brand-icons";
+import type { SiteContent } from "@/lib/types";
 
 const FIELD_CLASS =
   "w-full rounded-xl border border-line bg-surface px-4 py-3.5 text-fg placeholder:text-muted/70 transition-colors duration-300 focus:border-accent/60 focus:bg-surface-hover focus:outline-none";
 
-export function Contact() {
+export function Contact({ content }: { content: SiteContent }) {
   const [sent, setSent] = useState(false);
 
   /**
@@ -32,7 +32,7 @@ export function Contact() {
 
     const subject = encodeURIComponent(`New project enquiry — ${name}`);
     const body = encodeURIComponent(`${message}\n\n—\n${name}\n${email}`);
-    window.location.href = `mailto:${site.email}?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${content.email}?subject=${subject}&body=${body}`;
 
     setSent(true);
   }
@@ -63,10 +63,10 @@ export function Contact() {
                       Send the draft and it lands with me directly. If nothing
                       opened, write to{" "}
                       <a
-                        href={`mailto:${site.email}`}
+                        href={`mailto:${content.email}`}
                         className="text-accent underline underline-offset-4"
                       >
-                        {site.email}
+                        {content.email}
                       </a>
                       .
                     </p>
@@ -157,13 +157,13 @@ export function Contact() {
           <Reveal delay={0.08} className="lg:col-span-5">
             <div className="flex h-full flex-col gap-4">
               <a
-                href={`mailto:${site.email}`}
+                href={`mailto:${content.email}`}
                 className="group hover:border-accent/30 flex items-center justify-between gap-4 rounded-2xl border border-line bg-surface p-6 transition-colors duration-300"
               >
                 <span className="min-w-0">
                   <span className="route-label block">Email</span>
                   <span className="group-hover:text-accent mt-2 block truncate text-lg transition-colors">
-                    {site.email}
+                    {content.email}
                   </span>
                 </span>
                 <Mail
@@ -172,8 +172,8 @@ export function Contact() {
                 />
               </a>
 
-              {site.socials.map((social) => {
-                const Icon = brandIcons[social.name];
+              {content.socials.map((social) => {
+                const Icon = brandIcon(social.name);
                 return (
                   <a
                     key={social.name}
@@ -205,10 +205,10 @@ export function Contact() {
                     className="bg-accent-vivid animate-pulse-dot size-2 rounded-full"
                     aria-hidden="true"
                   />
-                  <span className="text-accent">{site.availability.label}</span>
+                  <span className="text-accent">{content.availability.label}</span>
                 </p>
                 <p className="text-muted mt-3 leading-relaxed">
-                  {site.availability.detail}. {site.location}.
+                  {content.availability.detail}. {content.location}.
                 </p>
               </div>
             </div>

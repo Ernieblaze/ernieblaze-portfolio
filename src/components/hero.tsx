@@ -8,9 +8,8 @@ import { ArrowDown, ArrowUpRight, Mail } from "lucide-react";
 import { Magnetic } from "@/components/magnetic-button";
 import { BrowserFrame } from "@/components/browser-frame";
 import { ParticleField } from "@/components/particle-field";
-import { brandIcons } from "@/components/brand-icons";
-import { site } from "@/lib/site";
-import type { Project } from "@/lib/types";
+import { brandIcon } from "@/components/brand-icons";
+import type { Project, SiteContent } from "@/lib/types";
 
 const TYPE_MS = 55;
 const HOLD_MS = 2800;
@@ -96,7 +95,13 @@ function useShowcaseIndex(addresses: string[], enabled: boolean) {
   return addresses.length ? index % addresses.length : 0;
 }
 
-export function Hero({ projects }: { projects: Project[] }) {
+export function Hero({
+  projects,
+  content,
+}: {
+  projects: Project[];
+  content: SiteContent;
+}) {
   const reduceMotion = useReducedMotion();
   const showcase = useMemo(() => projects.slice(0, 4), [projects]);
   const addresses = useMemo(
@@ -112,7 +117,7 @@ export function Hero({ projects }: { projects: Project[] }) {
       className="relative isolate overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28"
       id="top"
     >
-      {/* The one animated background on the site. Fades out at the edges so it
+      {/* The one animated background on the content. Fades out at the edges so it
           reads as atmosphere rather than a boxed-in effect. */}
       <ParticleField className="-z-10 [mask-image:radial-gradient(80%_75%_at_50%_40%,black,transparent)]" />
 
@@ -127,7 +132,7 @@ export function Hero({ projects }: { projects: Project[] }) {
               transition={{ duration: 0.6 }}
             >
               <span className="bg-accent-vivid animate-pulse-dot size-1.5 rounded-full" />
-              {site.availability.label}
+              {content.availability.label}
             </motion.p>
 
             <motion.h1
@@ -147,7 +152,7 @@ export function Hero({ projects }: { projects: Project[] }) {
               animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
             >
-              {site.tagline}
+              {content.tagline}
             </motion.p>
 
             <motion.p
@@ -156,7 +161,7 @@ export function Hero({ projects }: { projects: Project[] }) {
               animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             >
-              {site.heroSupport}
+              {content.heroSupport}
             </motion.p>
 
             <motion.div
@@ -199,8 +204,8 @@ export function Hero({ projects }: { projects: Project[] }) {
               animate={reduceMotion ? undefined : { opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              {site.socials.map((social) => {
-                const Icon = brandIcons[social.name];
+              {content.socials.map((social) => {
+                const Icon = brandIcon(social.name);
                 return (
                   <li key={social.name}>
                     <a
@@ -208,7 +213,7 @@ export function Hero({ projects }: { projects: Project[] }) {
                       target="_blank"
                       rel="noreferrer noopener"
                       className="text-muted hover:border-accent/40 hover:text-accent glass flex size-11 items-center justify-center rounded-full transition-all duration-300 hover:shadow-[0_0_24px_-8px_var(--glow-strong)]"
-                      aria-label={`${site.name} on ${social.name}`}
+                      aria-label={`${content.name} on ${social.name}`}
                     >
                       <Icon className="size-4" />
                     </a>
@@ -217,9 +222,9 @@ export function Hero({ projects }: { projects: Project[] }) {
               })}
               <li>
                 <a
-                  href={`mailto:${site.email}`}
+                  href={`mailto:${content.email}`}
                   className="text-muted hover:border-accent/40 hover:text-accent glass flex size-11 items-center justify-center rounded-full transition-all duration-300 hover:shadow-[0_0_24px_-8px_var(--glow-strong)]"
-                  aria-label={`Email ${site.name}`}
+                  aria-label={`Email ${content.name}`}
                 >
                   <Mail className="size-4" aria-hidden="true" />
                 </a>
@@ -284,7 +289,7 @@ export function Hero({ projects }: { projects: Project[] }) {
                 </div>
               </>
             ) : (
-              <BrowserFrame address={site.domain}>
+              <BrowserFrame address={content.domain}>
                 <div className="text-muted flex aspect-16/10 items-center justify-center text-sm">
                   No projects published yet.
                 </div>
@@ -300,7 +305,7 @@ export function Hero({ projects }: { projects: Project[] }) {
           animate={reduceMotion ? undefined : { opacity: 1 }}
           transition={{ duration: 0.9, delay: 0.5 }}
         >
-          {site.stats.map((stat) => (
+          {content.stats.map((stat) => (
             <div key={stat.label} className="bg-ink/80 px-6 py-7">
               <dt className="text-muted font-mono text-xs tracking-wider uppercase">
                 {stat.label}

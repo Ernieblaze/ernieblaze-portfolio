@@ -1,9 +1,13 @@
-import type { ProjectInput } from "./types";
+import type { ProjectInput, SiteContent } from "./types";
 import { MAX_IMAGES_PER_PROJECT } from "./uploads";
 import { IMAGE_BUCKET, storageHostname } from "./supabase";
 
 export type Validated =
   | { ok: true; value: ProjectInput }
+  | { ok: false; error: string };
+
+export type ValidatedContent =
+  | { ok: true; value: Partial<SiteContent> }
   | { ok: false; error: string };
 
 function str(value: unknown): string {
@@ -112,6 +116,167 @@ export function validateProject(body: unknown): Validated {
         result: str(caseStudy.result),
       },
       published: raw.published !== false,
+    },
+  };
+}
+
+/* -------------------------------------------------------------- site content */
+
+const LIMITS = {
+  short: 120,
+  line: 300,
+  paragraph: 1200,
+  listItem: 80,
+  maxParagraphs: 8,
+  maxSkills: 24,
+  maxStats: 6,
+  maxServices: 10,
+  maxSocials: 8,
+  maxDeliverables: 6,
+} as const;
+
+function clamp(value: unknown, max: number): string {
+  return str(value).slice(0, max);
+}
+
+function strings(value: unknown, maxItems: number, maxLength: number): string[] {
+  const raw = Array.isArray(value)
+    ? value
+    : str(value)
+        .split(/\r?\n/)
+        .filter(Boolean);
+
+  return raw
+    .filter((item): item is string => typeof item === "string")
+    .map((item) => item.trim().slice(0, maxLength))
+    .filter(Boolean)
+    .slice(0, maxItems);
+}
+
+/**
+ * Only our own bucket, the bundled seed art, or nothing.
+ *
+ * The about photo is the one image in this payload, and it goes through the
+ * same gate as project screenshots — otherwise the copy editor becomes a way to
+ * hotlink an arbitrary host from the front page.
+ */
+function cleanPhoto(value: unknown): string | null {
+  const src = str(value);
+  if (!src) return null;
+  return isOurImage(src) ? src : null;
+}
+
+/**
+ * Validates admin-submitted site copy.
+ *
+ * Deliberately forgiving about *missing* fields — an absent key means "leave
+ * the default", which is what lets the dashboard save one section without
+ * having to round-trip the whole document. It is strict about the fields that
+ * are present: everything is trimmed and length-capped, links must be http(s),
+ * and the photo must be an image we host.
+ */
+export function validateSiteContent(body: unknown): ValidatedContent {
+  if (!body || typeof body !== "object") {
+    return { ok: false, error: "Invalid request body." };
+  }
+
+  const raw = body as Record<string, unknown>;
+  const about = (raw.about ?? {}) as Record<string, unknown>;
+  const availability = (raw.availability ?? {}) as Record<string, unknown>;
+
+  const name = clamp(raw.name, LIMITS.short);
+  if (!name) return { ok: false, error: "Add your name." };
+
+  const email = str(raw.email);
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { ok: false, error: "Add a valid email address." };
+  }
+
+  const url = normaliseUrl(str(raw.url));
+  if (!url) {
+    return { ok: false, error: "Add a valid site URL, starting with https://" };
+  }
+
+  const socials: SiteContent["socials"] = [];
+  if (Array.isArray(raw.socials)) {
+    for (const entry of raw.socials.slice(0, LIMITS.maxSocials)) {
+      const item = (entry ?? {}) as Record<string, unknown>;
+      const href = normaliseUrl(str(item.href));
+      const socialName = clamp(item.name, LIMITS.listItem);
+      // A link with no destination is dropped rather than rejected, so one
+      // half-typed row doesn't block saving the rest of the page.
+      if (!href || !socialName) continue;
+      socials.push({
+        name: socialName,
+        handle: clamp(item.handle, LIMITS.listItem),
+        href,
+      });
+    }
+  }
+
+  const stats: SiteContent["stats"] = [];
+  if (Array.isArray(raw.stats)) {
+    for (const entry of raw.stats.slice(0, LIMITS.maxStats)) {
+      const item = (entry ?? {}) as Record<string, unknown>;
+      const value = clamp(item.value, LIMITS.listItem);
+      const label = clamp(item.label, LIMITS.short);
+      if (!value && !label) continue;
+      stats.push({ value, label });
+    }
+  }
+
+  const services: SiteContent["services"] = [];
+  if (Array.isArray(raw.services)) {
+    for (const entry of raw.services.slice(0, LIMITS.maxServices)) {
+      const item = (entry ?? {}) as Record<string, unknown>;
+      const title = clamp(item.title, LIMITS.short);
+      if (!title) continue;
+      services.push({
+        title,
+        description: clamp(item.description, LIMITS.paragraph),
+        deliverables: strings(
+          item.deliverables,
+          LIMITS.maxDeliverables,
+          LIMITS.listItem,
+        ),
+      });
+    }
+  }
+
+  return {
+    ok: true,
+    value: {
+      name,
+      domain: clamp(raw.domain, LIMITS.short),
+      url,
+      role: clamp(raw.role, LIMITS.short),
+      email,
+      location: clamp(raw.location, LIMITS.line),
+
+      tagline: clamp(raw.tagline, LIMITS.line),
+      heroSupport: clamp(raw.heroSupport, LIMITS.paragraph),
+
+      availability: {
+        open: availability.open !== false,
+        label: clamp(availability.label, LIMITS.short),
+        detail: clamp(availability.detail, LIMITS.line),
+      },
+
+      about: {
+        heading: clamp(about.heading, LIMITS.line),
+        paragraphs: strings(
+          about.paragraphs,
+          LIMITS.maxParagraphs,
+          LIMITS.paragraph,
+        ),
+        photo: cleanPhoto(about.photo),
+        photoAlt: clamp(about.photoAlt, LIMITS.short) || name,
+      },
+
+      skills: strings(raw.skills, LIMITS.maxSkills, LIMITS.listItem),
+      stats,
+      services,
+      socials,
     },
   };
 }

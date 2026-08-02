@@ -2,10 +2,8 @@ import { NextResponse } from "next/server";
 
 import { isAuthenticated } from "@/lib/auth";
 import { deleteProject, updateProject } from "@/lib/projects";
+import { revalidatePublicPages } from "@/lib/revalidate";
 import { validateProject } from "@/lib/validate";
-
-// The public pages render per request, so edits and deletions are live as soon
-// as these handlers return — there is no cache to invalidate.
 
 type Context = { params: Promise<{ id: string }> };
 
@@ -32,6 +30,8 @@ export async function PUT(request: Request, { params }: Context) {
     return NextResponse.json({ error: "Project not found." }, { status: 404 });
   }
 
+  revalidatePublicPages(project.slug);
+
   return NextResponse.json({ project });
 }
 
@@ -45,6 +45,9 @@ export async function DELETE(_request: Request, { params }: Context) {
   if (!project) {
     return NextResponse.json({ error: "Project not found." }, { status: 404 });
   }
+
+  // Refreshes the listing and drops the now-404 case-study page.
+  revalidatePublicPages(project.slug);
 
   return NextResponse.json({ deleted: project.id });
 }

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { isAuthenticated } from "@/lib/auth";
 import { createProject, getAllProjects, getPublishedProjects } from "@/lib/projects";
+import { revalidatePublicPages } from "@/lib/revalidate";
 import { validateProject } from "@/lib/validate";
 
 /** Signed-in admins see drafts too; everyone else sees published projects. */
@@ -30,7 +31,9 @@ export async function POST(request: Request) {
 
   const project = await createProject(result.value);
 
-  // No cache to invalidate — the public pages render per request, so the new
-  // project is live as soon as this returns.
+  // The public pages are cached, so without this the new project would not
+  // appear until the revalidate window expired.
+  revalidatePublicPages(project.slug);
+
   return NextResponse.json({ project }, { status: 201 });
 }

@@ -10,7 +10,7 @@ import { Reveal } from "@/components/reveal";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getProjectBySlug, getPublishedProjectsSafe } from "@/lib/projects";
-import { site } from "@/lib/site";
+import { getSiteContentSafe } from "@/lib/site-content";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -47,7 +47,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!project) return { title: "Project not found" };
 
-  const url = `${site.url}/work/${project.slug}`;
+  const content = await getSiteContentSafe();
+  const url = `${content.url}/work/${project.slug}`;
 
   return {
     title: `${project.title} — ${project.category}`,
@@ -56,13 +57,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       type: "article",
       url,
-      title: `${project.title} — built by ${site.name}`,
+      title: `${project.title} — built by ${content.name}`,
       description: project.description,
       images: [{ url: project.images[0], width: 1600, height: 1000 }],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${project.title} — built by ${site.name}`,
+      title: `${project.title} — built by ${content.name}`,
       description: project.description,
       images: [project.images[0]],
     },
@@ -81,14 +82,17 @@ export default async function ProjectPage({ params }: PageProps) {
 
   if (!project || !project.published) notFound();
 
-  const others = (await getPublishedProjectsSafe())
-    .filter((item) => item.id !== project.id)
-    .slice(0, 3);
+  const [others, content] = await Promise.all([
+    getPublishedProjectsSafe().then((all) =>
+      all.filter((item) => item.id !== project.id).slice(0, 3),
+    ),
+    getSiteContentSafe(),
+  ]);
 
   return (
     <>
       <Ambient />
-      <SiteHeader />
+      <SiteHeader content={content} />
 
       <main className="mx-auto max-w-5xl px-5 pt-32 pb-24 sm:px-8 sm:pt-40">
         <Link
@@ -206,7 +210,7 @@ export default async function ProjectPage({ params }: PageProps) {
         ) : null}
       </main>
 
-      <SiteFooter />
+      <SiteFooter content={content} />
     </>
   );
 }

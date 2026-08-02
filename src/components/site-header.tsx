@@ -6,9 +6,9 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
-import { site } from "@/lib/site";
+import type { SiteContent } from "@/lib/types";
 
-export function SiteHeader() {
+export function SiteHeader({ content }: { content: SiteContent }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const reduceMotion = useReducedMotion();
@@ -71,13 +71,6 @@ export function SiteHeader() {
 
   return (
     <>
-      <a
-        href="#work"
-        className="bg-accent-vivid focus:ring-accent sr-only rounded-full px-4 py-2 font-medium text-on-accent focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-100"
-      >
-        Skip to work
-      </a>
-
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
           scrolled
@@ -89,10 +82,10 @@ export function SiteHeader() {
           <Link
             href="/"
             className="group flex items-baseline gap-2"
-            aria-label={`${site.name} — home`}
+            aria-label={`${content.name} — home`}
           >
             <span className="font-display text-lg font-bold tracking-tight">
-              {site.name}
+              {content.name}
             </span>
             <span
               className="bg-accent-vivid animate-pulse-dot size-1.5 rounded-full"
@@ -102,7 +95,7 @@ export function SiteHeader() {
 
           {/* Desktop nav — routes, in mono, matching the address bar device */}
           <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
-            {site.nav.map((item) => (
+            {content.nav.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
@@ -162,7 +155,7 @@ export function SiteHeader() {
 
             <div className="relative flex h-full flex-col">
               <div className="flex h-18 items-center justify-between px-5">
-                <span className="font-display text-lg font-bold">{site.name}</span>
+                <span className="font-display text-lg font-bold">{content.name}</span>
                 <button
                   type="button"
                   onClick={() => setMenuOpen(false)}
@@ -178,7 +171,7 @@ export function SiteHeader() {
                 aria-label="Mobile"
                 className="flex flex-1 flex-col justify-center gap-1 px-5 pb-24"
               >
-                {site.nav.map((item, index) => (
+                {content.nav.map((item, index) => (
                   <motion.a
                     key={item.href}
                     href={item.href}

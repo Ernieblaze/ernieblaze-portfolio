@@ -16,13 +16,18 @@ Deployed on Vercel, data in Supabase (Postgres + Storage).
 - **Tailwind v4 has no `tailwind.config.js`.** Theme tokens, custom utilities
   (`glass`, `grid-field`, `route-label`) and keyframes are all declared in
   `src/app/globals.css`.
-- **All public copy lives in `src/lib/site.ts`.** Change content there, not in
-  components.
+- **Public copy is edited in the dashboard, not in the code.** `src/lib/site.ts`
+  holds *defaults*; the live values are those merged with the Supabase
+  `site_content` row by `getSiteContentSafe()`. Components take a
+  `content: SiteContent` prop — don't reintroduce a direct `site` import in a
+  component, or that section stops being editable.
 - **Every write goes through `validateProject`** in `src/lib/validate.ts`, which
   also rejects image URLs that aren't ours. The admin form is a convenience;
   the server is the gate.
-- **Mutations must call `revalidatePath`**, or new work won't appear on the
-  cached public pages.
+- **Mutations must call `revalidatePublicPages()`** (`src/lib/revalidate.ts`),
+  or the save succeeds and the cached public pages keep showing the old content
+  until the revalidate window expires. This failure is silent — the dashboard
+  looks like it worked.
 - **Motion must degrade.** Anything animated checks `useReducedMotion`, and no
   content may depend on an animation to become visible.
 

@@ -66,3 +66,35 @@ create policy "project images are readable"
   for select
   to anon, authenticated
   using (bucket_id = 'project-images');
+
+-- ------------------------------------------------------------ site content
+--
+-- Every piece of hand-written copy on the public site — hero, about, services,
+-- contact details, social links — as a single JSON row.
+--
+-- One row, id 'default'. Stored as JSONB rather than a column per field
+-- because copy changes shape (another paragraph, a fifth service) and a
+-- migration per wording change is a tax nobody pays twice. Validation lives in
+-- src/lib/validate.ts instead, and src/lib/site.ts supplies defaults for
+-- anything absent, so an empty table renders a complete site.
+
+create table if not exists public.site_content (
+  id         text primary key,
+  data       jsonb       not null default '{}'::jsonb,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.site_content enable row level security;
+
+-- Readable by anyone; writes only happen server-side with the service-role
+-- key, which bypasses RLS. Same posture as the projects table.
+drop policy if exists "site content is readable" on public.site_content;
+create policy "site content is readable"
+  on public.site_content
+  for select
+  to anon, authenticated
+  using (true);
+
+insert into public.site_content (id, data)
+values ('default', '{}'::jsonb)
+on conflict (id) do nothing;

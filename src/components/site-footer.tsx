@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { ArrowUp } from "lucide-react";
 
-import { brandIcons } from "@/components/brand-icons";
-import { site } from "@/lib/site";
+import { brandIcon } from "@/components/brand-icons";
+import type { SiteContent } from "@/lib/types";
 
-export function SiteFooter() {
+export function SiteFooter({ content }: { content: SiteContent }) {
   return (
     <footer className="border-t border-line">
       {/* Marquee of the site's own address — the signature device, one last time */}
@@ -18,7 +18,7 @@ export function SiteFooter() {
               key={index}
               className="flex items-center gap-10 font-mono text-sm tracking-wider text-fg/10 uppercase"
             >
-              {site.domain}
+              {content.domain}
               <span className="text-accent/30">/</span>
             </span>
           ))}
@@ -28,15 +28,15 @@ export function SiteFooter() {
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-5 py-12 sm:px-8 md:flex-row md:items-center md:justify-between">
         <div>
           <Link href="/" className="font-display text-lg font-bold tracking-tight">
-            {site.name}
+            {content.name}
           </Link>
           <p className="text-muted mt-2 text-sm">
-            {site.role} · {site.location}
+            {content.role} · {content.location}
           </p>
         </div>
 
         <nav aria-label="Footer" className="flex flex-wrap items-center gap-x-6 gap-y-3">
-          {site.nav.map((item) => (
+          {content.nav.map((item) => (
             <a
               key={item.href}
               href={item.href}
@@ -54,8 +54,8 @@ export function SiteFooter() {
         </nav>
 
         <div className="flex items-center gap-2">
-          {site.socials.map((social) => {
-            const Icon = brandIcons[social.name];
+          {content.socials.map((social) => {
+            const Icon = brandIcon(social.name);
             return (
               <a
                 key={social.name}
@@ -63,7 +63,7 @@ export function SiteFooter() {
                 target="_blank"
                 rel="noreferrer noopener"
                 className="text-muted hover:border-accent/40 hover:text-accent glass flex size-10 items-center justify-center rounded-full transition-colors duration-300"
-                aria-label={`${site.name} on ${social.name}`}
+                aria-label={`${content.name} on ${social.name}`}
               >
                 <Icon className="size-4" />
               </a>
@@ -81,7 +81,7 @@ export function SiteFooter() {
 
       <div className="mx-auto max-w-7xl px-5 pb-10 sm:px-8">
         <p className="text-muted/60 font-mono text-xs">
-          © {new Date().getFullYear()} {site.name}. Built with Next.js.
+          © {new Date().getFullYear()} {content.name}. Built with Next.js.
         </p>
       </div>
     </footer>

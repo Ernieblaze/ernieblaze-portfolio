@@ -12,9 +12,11 @@ import {
   Pencil,
   Plus,
   Trash2,
+  Type,
 } from "lucide-react";
 
 import { ProjectForm } from "@/components/admin/project-form";
+import { SiteContentForm } from "@/components/admin/site-content-form";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { site } from "@/lib/site";
 import type { Project } from "@/lib/types";
@@ -24,8 +26,12 @@ type Panel =
   | { mode: "new" }
   | { mode: "edit"; project: Project };
 
+/** Projects are the uploads; content is everything written on the site. */
+type Tab = "projects" | "content";
+
 export function AdminDashboard({ projects }: { projects: Project[] }) {
   const router = useRouter();
+  const [tab, setTab] = useState<Tab>("projects");
   const [panel, setPanel] = useState<Panel>({ mode: "closed" });
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -88,6 +94,53 @@ export function AdminDashboard({ projects }: { projects: Project[] }) {
       </header>
 
       <main className="mx-auto max-w-6xl px-5 py-12 sm:px-8">
+        {/* Two jobs, deliberately separated: what you upload, and what you write. */}
+        <nav
+          aria-label="Dashboard sections"
+          className="mb-10 flex gap-1 rounded-full border border-line bg-surface p-1"
+        >
+          {(
+            [
+              { id: "projects", label: "Projects", icon: Plus },
+              { id: "content", label: "Site content", icon: Type },
+            ] as const
+          ).map((item) => {
+            const Icon = item.icon;
+            const active = tab === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setTab(item.id)}
+                aria-current={active ? "page" : undefined}
+                className={`flex flex-1 items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium transition-colors ${
+                  active
+                    ? "bg-accent-vivid text-on-accent"
+                    : "text-muted hover:text-accent"
+                }`}
+              >
+                <Icon className="size-4" aria-hidden="true" />
+                {item.label}
+              </button>
+            );
+          })}
+        </nav>
+
+        {tab === "content" ? (
+          <>
+            <div className="mb-8">
+              <h1 className="font-display text-4xl font-bold tracking-tight">
+                Site content
+              </h1>
+              <p className="text-muted mt-2">
+                Everything written on your public site. Changes go live as soon
+                as you save.
+              </p>
+            </div>
+            <SiteContentForm />
+          </>
+        ) : (
+          <>
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
             <h1 className="font-display text-4xl font-bold tracking-tight">
@@ -223,6 +276,8 @@ export function AdminDashboard({ projects }: { projects: Project[] }) {
             </button>
           </div>
         ) : null}
+          </>
+        )}
       </main>
     </div>
   );
