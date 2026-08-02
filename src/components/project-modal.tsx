@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, X } from "lucide-react";
 
 import { BrowserFrame } from "@/components/browser-frame";
@@ -80,7 +80,7 @@ export function ProjectModal({
   return (
     <AnimatePresence>
       {project && (
-        <motion.div
+        <m.div
           className="fixed inset-0 z-70 overflow-y-auto overscroll-contain p-4 sm:p-8"
           initial={reduceMotion ? undefined : { opacity: 0 }}
           animate={reduceMotion ? undefined : { opacity: 1 }}
@@ -95,7 +95,7 @@ export function ProjectModal({
             tabIndex={-1}
           />
 
-          <motion.div
+          <m.div
             ref={panelRef}
             role="dialog"
             aria-modal="true"
@@ -203,8 +203,8 @@ export function ProjectModal({
                 </Link>
               </div>
             </div>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

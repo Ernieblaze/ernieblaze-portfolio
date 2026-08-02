@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type MouseEvent } from "react";
 import Link from "next/link";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -133,7 +133,7 @@ export function SiteHeader({ content }: { content: SiteContent }) {
 
       <AnimatePresence>
         {menuOpen && (
-          <motion.div
+          <m.div
             className="fixed inset-0 z-60 md:hidden"
             initial={reduceMotion ? undefined : { opacity: 0 }}
             animate={reduceMotion ? undefined : { opacity: 1 }}
@@ -172,7 +172,7 @@ export function SiteHeader({ content }: { content: SiteContent }) {
                 className="flex flex-1 flex-col justify-center gap-1 px-5 pb-24"
               >
                 {content.nav.map((item, index) => (
-                  <motion.a
+                  <m.a
                     key={item.href}
                     href={item.href}
                     onClick={(event) => goToSection(event, item.href)}
@@ -191,10 +191,10 @@ export function SiteHeader({ content }: { content: SiteContent }) {
                     <span className="font-display group-hover:text-accent text-4xl font-bold tracking-tight transition-colors">
                       {item.label}
                     </span>
-                  </motion.a>
+                  </m.a>
                 ))}
 
-                <motion.a
+                <m.a
                   href="#contact"
                   onClick={(event) => goToSection(event, "#contact")}
                   className="bg-accent-vivid mt-10 rounded-full px-6 py-4 text-center font-medium text-on-accent"
@@ -203,10 +203,10 @@ export function SiteHeader({ content }: { content: SiteContent }) {
                   transition={{ delay: 0.36, duration: 0.5 }}
                 >
                   Start a project
-                </motion.a>
+                </m.a>
               </nav>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </>

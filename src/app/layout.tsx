@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 
+import { MotionProvider } from "@/components/motion-provider";
 import { site } from "@/lib/site";
 import { themeInitScript } from "@/lib/theme";
 import "./globals.css";
@@ -90,7 +91,11 @@ export default function RootLayout({
             palette. Inline and synchronous is the point. */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="bg-ink text-fg min-h-full">{children}</body>
+      <body className="bg-ink text-fg min-h-full">
+        {/* Children stay server components — this only supplies motion
+            features to the client components nested inside them. */}
+        <MotionProvider>{children}</MotionProvider>
+      </body>
     </html>
   );
 }

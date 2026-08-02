@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
 import { BrowserFrame } from "@/components/browser-frame";
@@ -25,7 +25,7 @@ export function ProjectCard({ project, index, onOpen }: ProjectCardProps) {
   const reduceMotion = useReducedMotion();
 
   return (
-    <motion.article
+    <m.article
       id={project.slug}
       className="group hover:border-accent/30 lift relative rounded-2xl border border-line bg-surface p-3 transition-colors duration-500 hover:shadow-[0_28px_80px_-40px_var(--glow-strong)] sm:p-4"
       initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
@@ -95,6 +95,6 @@ export function ProjectCard({ project, index, onOpen }: ProjectCardProps) {
           </a>
         </div>
       </div>
-    </motion.article>
+    </m.article>
   );
 }

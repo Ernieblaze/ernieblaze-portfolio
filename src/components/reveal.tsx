@@ -1,7 +1,7 @@
 "use client";
 
 import type { ComponentType } from "react";
-import { motion, useReducedMotion, type HTMLMotionProps } from "framer-motion";
+import { m, useReducedMotion, type HTMLMotionProps } from "framer-motion";
 
 type RevealProps = HTMLMotionProps<"div"> & {
   /** Seconds to wait before this element starts. Use for staggering siblings. */
@@ -28,7 +28,7 @@ export function Reveal({
 
   // The element varies but the props don't; motion's per-tag types can't
   // express that, so the tag is narrowed to one shared prop shape.
-  const Component = motion[as] as unknown as ComponentType<HTMLMotionProps<"div">>;
+  const Component = m[as] as unknown as ComponentType<HTMLMotionProps<"div">>;
 
   if (reduceMotion) {
     const { initial, whileInView, viewport, transition, ...plain } = rest;

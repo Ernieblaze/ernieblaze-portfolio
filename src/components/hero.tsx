@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { ArrowDown, ArrowUpRight, Mail } from "lucide-react";
 
 import { Magnetic } from "@/components/magnetic-button";
@@ -129,7 +129,7 @@ export function Hero({
       className="relative isolate overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28"
       id="top"
     >
-      {/* The one animated background on the content. Fades out at the edges so it
+      {/* The one animated background on the site. Fades out at the edges so it
           reads as atmosphere rather than a boxed-in effect. */}
       <ParticleField className="-z-10 [mask-image:radial-gradient(80%_75%_at_50%_40%,black,transparent)]" />
 
@@ -137,7 +137,7 @@ export function Hero({
         <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-12">
           {/* ------------------------------------------------------- copy */}
           <div className="lg:col-span-6 xl:col-span-6">
-            <motion.p
+            <m.p
               className="flex"
               initial={reduceMotion ? undefined : { opacity: 0 }}
               animate={reduceMotion ? undefined : { opacity: 1 }}
@@ -165,9 +165,9 @@ export function Hero({
                 </span>
                 <span className="route-label">{content.availability.label}</span>
               </span>
-            </motion.p>
+            </m.p>
 
-            <motion.h1
+            <m.h1
               className="font-display mt-6 text-display font-bold"
               initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
               animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
@@ -180,27 +180,27 @@ export function Hero({
                   <span className="name-fade">{lastName}</span>
                 </>
               )}
-            </motion.h1>
+            </m.h1>
 
-            <motion.p
+            <m.p
               className="mt-8 max-w-xl text-lg leading-relaxed text-fg/85 text-balance sm:text-xl"
               initial={reduceMotion ? undefined : { opacity: 0, y: 18 }}
               animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
             >
               {content.tagline}
-            </motion.p>
+            </m.p>
 
-            <motion.p
+            <m.p
               className="text-muted mt-4 max-w-lg leading-relaxed"
               initial={reduceMotion ? undefined : { opacity: 0, y: 18 }}
               animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             >
               {content.heroSupport}
-            </motion.p>
+            </m.p>
 
-            <motion.div
+            <m.div
               className="mt-10 flex flex-wrap items-center gap-3"
               initial={reduceMotion ? undefined : { opacity: 0, y: 18 }}
               animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
@@ -231,10 +231,10 @@ export function Hero({
                   />
                 </a>
               </Magnetic>
-            </motion.div>
+            </m.div>
 
             {/* Socials */}
-            <motion.ul
+            <m.ul
               className="mt-10 flex items-center gap-2"
               initial={reduceMotion ? undefined : { opacity: 0 }}
               animate={reduceMotion ? undefined : { opacity: 1 }}
@@ -265,11 +265,11 @@ export function Hero({
                   <Mail className="size-4" aria-hidden="true" />
                 </a>
               </li>
-            </motion.ul>
+            </m.ul>
           </div>
 
           {/* -------------------------------------------------- showcase */}
-          <motion.div
+          <m.div
             className="lg:col-span-6"
             initial={reduceMotion ? undefined : { opacity: 0, y: 30 }}
             animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
@@ -288,7 +288,7 @@ export function Hero({
                 >
                   <div className="relative aspect-16/10">
                     <AnimatePresence mode="sync">
-                      <motion.div
+                      <m.div
                         key={active.id}
                         className="absolute inset-0"
                         initial={reduceMotion ? undefined : { opacity: 0, scale: 1.02 }}
@@ -304,7 +304,7 @@ export function Hero({
                           className="object-cover object-top"
                           priority
                         />
-                      </motion.div>
+                      </m.div>
                     </AnimatePresence>
                   </div>
                 </BrowserFrame>
@@ -331,11 +331,11 @@ export function Hero({
                 </div>
               </BrowserFrame>
             )}
-          </motion.div>
+          </m.div>
         </div>
 
         {/* Stats strip */}
-        <motion.dl
+        <m.dl
           className="mt-20 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3"
           initial={reduceMotion ? undefined : { opacity: 0 }}
           animate={reduceMotion ? undefined : { opacity: 1 }}
@@ -351,7 +351,7 @@ export function Hero({
               </dd>
             </div>
           ))}
-        </motion.dl>
+        </m.dl>
       </div>
     </section>
   );
