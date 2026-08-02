@@ -176,6 +176,9 @@ export function Hero({
               {firstName}
               {lastName && (
                 <>
+                  {/* The space is for anything reading the text rather than
+                      seeing it — a <br> renders no character, so without this
+                      the heading is announced and indexed as "ErnieBlaze". */}{" "}
                   <br />
                   <span className="name-fade">{lastName}</span>
                 </>

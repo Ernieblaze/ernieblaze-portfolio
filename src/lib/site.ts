@@ -11,8 +11,19 @@ import type { SiteContent } from "./types";
  */
 export const site: SiteContent = {
   name: "Ernie Blaze",
-  domain: "ernieblaze.dev",
-  url: "https://ernieblaze.dev",
+  /*
+   * The address the site is actually reachable at.
+   *
+   * This feeds canonical tags, the sitemap and Open Graph images, so pointing
+   * it at a domain that has not been connected yet is worse than useless: it
+   * tells search engines the real page is somewhere that does not resolve, and
+   * every shared link loses its preview card because the image 404s.
+   *
+   * Change it under /admin → Site content → Your details on the day the custom
+   * domain starts resolving, not before.
+   */
+  domain: "ernieblaze-portfolio.vercel.app",
+  url: "https://ernieblaze-portfolio.vercel.app",
   role: "Freelance web developer",
   email: "hello@ernieblaze.dev",
   location: "Remote · working across UK & US hours",
