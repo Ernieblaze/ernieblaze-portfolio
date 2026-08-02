@@ -15,9 +15,32 @@ import { cookies } from "next/headers";
 export const SESSION_COOKIE = "eb_admin_session";
 const SESSION_MAX_AGE = 60 * 60 * 12; // 12 hours
 
-/** Change the password by setting ADMIN_PASSWORD in .env.local. */
+/** The default is documented in a public README, so it is a local-only convenience. */
+const DEV_PASSWORD = "ernieblaze2026";
+
+/**
+ * Change the password by setting ADMIN_PASSWORD.
+ *
+ * In production there is no fallback. A default password that is written down
+ * in a public repository is not a password, and the previous behaviour meant a
+ * deploy that simply forgot the environment variable was wide open to anyone
+ * who had read the setup guide — silently, with the dashboard behaving
+ * normally. Failing shut is the only safe direction here: an admin route that
+ * throws is an inconvenience, one that lets a stranger in is not.
+ */
 function adminPassword(): string {
-  return process.env.ADMIN_PASSWORD || "ernieblaze2026";
+  const configured = process.env.ADMIN_PASSWORD;
+  if (configured) return configured;
+
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(
+      "ADMIN_PASSWORD is not set. Set it in your hosting environment — the " +
+        "development default is published in this repo's README and must not " +
+        "be relied on in production.",
+    );
+  }
+
+  return DEV_PASSWORD;
 }
 
 /**
@@ -58,10 +81,23 @@ export function isValidSessionToken(token: string | undefined): boolean {
   return Number(expiresAt) > Date.now();
 }
 
-/** True when the current request carries a valid admin session. */
+/**
+ * True when the current request carries a valid admin session.
+ *
+ * Never throws. A misconfigured `ADMIN_PASSWORD` makes `sign` throw, and this
+ * is called from public paths too (`GET /api/projects` uses it to decide
+ * whether to include drafts) — so a missing variable must read as "not an
+ * admin", not as a 500 on a public endpoint. The signing failure still blocks
+ * every write, which is the behaviour that matters.
+ */
 export async function isAuthenticated(): Promise<boolean> {
-  const store = await cookies();
-  return isValidSessionToken(store.get(SESSION_COOKIE)?.value);
+  try {
+    const store = await cookies();
+    return isValidSessionToken(store.get(SESSION_COOKIE)?.value);
+  } catch (error) {
+    console.error("[auth] Could not verify the session:", error);
+    return false;
+  }
 }
 
 export const sessionCookieOptions = {

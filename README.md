@@ -134,13 +134,13 @@ that JSON file changes nothing.
 
 ## Change the admin password
 
-The password is read from `ADMIN_PASSWORD`, falling back to `ernieblaze2026` if
-it isn't set.
+The password is read from `ADMIN_PASSWORD`. In development only, it falls back
+to `ernieblaze2026` so a fresh clone runs without setup.
 
-> **Set it in every environment.** That fallback is written here, in a public
-> repo, so anywhere `ADMIN_PASSWORD` is missing the dashboard password is
-> effectively published. It exists for a first local run, not for anything
-> reachable from the internet.
+> **In production there is no fallback — it throws.** That default is written
+> here, in a public repo, so treating it as a password would mean anyone who
+> read this file could sign in. A deploy missing `ADMIN_PASSWORD` fails closed
+> rather than silently accepting the published default.
 
 ```bash
 # .env.local

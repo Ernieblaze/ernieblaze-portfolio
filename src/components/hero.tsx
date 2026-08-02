@@ -109,6 +109,18 @@ export function Hero({
     [showcase],
   );
 
+  /*
+   * The headline stacks the name over two lines. It used to be two hardcoded
+   * words; now that the name is editable it is split on the last space, so
+   * "Ernie Blaze" still breaks the same way and a single word or a longer name
+   * both render sensibly instead of breaking the layout.
+   */
+  const [firstName, lastName] = useMemo(() => {
+    const parts = content.name.trim().split(/\s+/);
+    if (parts.length < 2) return [content.name.trim(), ""];
+    return [parts.slice(0, -1).join(" "), parts[parts.length - 1]];
+  }, [content.name]);
+
   const index = useShowcaseIndex(addresses, !reduceMotion);
   const active = showcase[index];
 
@@ -126,13 +138,33 @@ export function Hero({
           {/* ------------------------------------------------------- copy */}
           <div className="lg:col-span-6 xl:col-span-6">
             <motion.p
-              className="route-label flex items-center gap-2"
+              className="flex"
               initial={reduceMotion ? undefined : { opacity: 0 }}
               animate={reduceMotion ? undefined : { opacity: 1 }}
               transition={{ duration: 0.6 }}
             >
-              <span className="bg-accent-vivid animate-pulse-dot size-1.5 rounded-full" />
-              {content.availability.label}
+              {/*
+                A pill rather than loose text: on light mode a cyan label
+                floating on off-white had nothing holding it, and it read as a
+                stray line rather than a status.
+              */}
+              <span className="glass inline-flex items-center gap-2.5 rounded-full py-2 pr-4 pl-3">
+                <span className="relative flex size-2 shrink-0">
+                  {content.availability.open && (
+                    <span
+                      className="bg-accent-vivid animate-pulse-dot absolute inline-flex size-full rounded-full"
+                      aria-hidden="true"
+                    />
+                  )}
+                  <span
+                    className={`relative inline-flex size-2 rounded-full ${
+                      content.availability.open ? "bg-accent-vivid" : "bg-muted"
+                    }`}
+                    aria-hidden="true"
+                  />
+                </span>
+                <span className="route-label">{content.availability.label}</span>
+              </span>
             </motion.p>
 
             <motion.h1
@@ -141,9 +173,13 @@ export function Hero({
               animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
               transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
             >
-              Ernie
-              <br />
-              <span className="text-fg/35">Blaze</span>
+              {firstName}
+              {lastName && (
+                <>
+                  <br />
+                  <span className="name-fade">{lastName}</span>
+                </>
+              )}
             </motion.h1>
 
             <motion.p
@@ -306,7 +342,7 @@ export function Hero({
           transition={{ duration: 0.9, delay: 0.5 }}
         >
           {content.stats.map((stat) => (
-            <div key={stat.label} className="bg-ink/80 px-6 py-7">
+            <div key={stat.label} className="bg-ink-raised px-6 py-7">
               <dt className="text-muted font-mono text-xs tracking-wider uppercase">
                 {stat.label}
               </dt>
