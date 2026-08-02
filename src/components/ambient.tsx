@@ -1,11 +1,17 @@
 /**
  * Page atmosphere: one hairline grid and two soft accent blooms.
  *
- * Pure CSS and fixed-position, so it costs nothing to scroll and never
- * repaints. Every colour comes from a token, so the same markup produces a
- * cyan glow on near-black and a cool teal wash on light — the light version is
- * deliberately weaker, because a bloom that reads as atmosphere on dark reads
- * as a smudge on white.
+ * The blooms are radial gradients, not blurred circles. A `filter: blur(140px)`
+ * on a 46rem element makes the browser allocate a texture that size and run a
+ * very wide gaussian over it — on a phone that is tens of megabytes of GPU
+ * memory and a visible hitch the first time it composites, for a shape the eye
+ * reads as "soft glow" either way. A gradient draws the same thing for free.
+ *
+ * Fixed-position and `pointer-events: none`, so it never repaints on scroll and
+ * never intercepts a tap. Every colour comes from a token, so the same markup
+ * produces a cyan glow on near-black and a cool teal wash on light — the light
+ * version is deliberately weaker, because a bloom that reads as atmosphere on
+ * dark reads as a smudge on white.
  *
  * The hero's particle field sits on top of this. This layer stays still.
  */
@@ -20,14 +26,20 @@ export function Ambient() {
 
       {/* Bloom behind the hero */}
       <div
-        className="absolute -top-[22rem] right-[-14rem] size-[46rem] rounded-full blur-[140px]"
-        style={{ backgroundColor: "var(--glow-soft)" }}
+        className="absolute -top-[22rem] right-[-14rem] size-[46rem] rounded-full"
+        style={{
+          background:
+            "radial-gradient(closest-side, var(--glow-soft), transparent 100%)",
+        }}
       />
 
       {/* Dimmer counterweight low on the left */}
       <div
-        className="absolute bottom-[-20rem] left-[-16rem] size-[40rem] rounded-full blur-[150px]"
-        style={{ backgroundColor: "var(--glow-soft)", opacity: 0.6 }}
+        className="absolute bottom-[-20rem] left-[-16rem] size-[40rem] rounded-full opacity-60"
+        style={{
+          background:
+            "radial-gradient(closest-side, var(--glow-soft), transparent 100%)",
+        }}
       />
 
       {/* Vignette so text never sits on a bright edge */}

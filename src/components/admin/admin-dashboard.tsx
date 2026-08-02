@@ -56,7 +56,7 @@ export function AdminDashboard({ projects }: { projects: Project[] }) {
   return (
     <div className="min-h-dvh">
       {/* Bar */}
-      <header className="sticky top-0 z-40 border-b border-line bg-ink/80 backdrop-blur-xl">
+      <header className="blur-surface sticky top-0 z-40 border-b border-line bg-ink/92">
         <div className="mx-auto flex h-18 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
           <div className="flex items-baseline gap-3">
             <span className="font-display text-lg font-bold tracking-tight">

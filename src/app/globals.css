@@ -23,6 +23,9 @@
   --on-accent: #04161a;
 
   --glass-fill: rgb(255 255 255 / 0.05);
+  /* Used where the blur is skipped — carries the surface on its own, so it is
+     deliberately stronger than the value that sits on top of a blur. */
+  --glass-fill-solid: rgb(255 255 255 / 0.08);
   --glass-border: rgb(255 255 255 / 0.1);
   --line: rgb(255 255 255 / 0.1);
   --line-soft: rgb(255 255 255 / 0.05);
@@ -58,6 +61,7 @@
   --on-accent: #ffffff;
 
   --glass-fill: rgb(255 255 255 / 0.72);
+  --glass-fill-solid: rgb(255 255 255 / 0.94);
   --glass-border: rgb(7 18 22 / 0.09);
   --line: rgb(7 18 22 / 0.1);
   --line-soft: rgb(7 18 22 / 0.06);
@@ -157,12 +161,45 @@ body {
    Utilities
    -------------------------------------------------------------------------- */
 
+/*
+ * Frosted surface — but only where the device can pay for it.
+ *
+ * `backdrop-filter` is the most expensive thing on this page for a phone: the
+ * compositor has to re-sample everything behind the element on every frame it
+ * moves. With a blurred header plus a dozen blurred pills over a scrolling
+ * page, a mid-range Android drops frames continuously — this was the main
+ * cause of the scroll jank, not the animations.
+ *
+ * So the blur is gated on `pointer: fine`, which in practice means a mouse and
+ * a machine with a GPU budget to spare. Touch devices get a more opaque fill
+ * instead: the same shape, edge and elevation, at zero compositing cost.
+ */
 @utility glass {
-  background-color: var(--glass-fill);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background-color: var(--glass-fill-solid);
   border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-lift);
+}
+
+/*
+ * The blur half of the bargain, kept as plain CSS rather than nested inside
+ * `@utility` — a utility whose only content is an at-rule sends the Tailwind
+ * compiler out of memory.
+ *
+ * `.blur-surface` is for sticky bars and overlays that blur what scrolls
+ * beneath them; pair it with a `bg-*` class, which is what touch devices get on
+ * its own.
+ */
+@media (pointer: fine) {
+  .glass {
+    background-color: var(--glass-fill);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+
+  .blur-surface {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
 }
 
 /* Opaque panels that need the same elevation as glass. */

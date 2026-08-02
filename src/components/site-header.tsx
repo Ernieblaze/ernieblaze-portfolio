@@ -81,7 +81,7 @@ export function SiteHeader() {
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
           scrolled
-            ? "border-b border-line bg-ink/70 backdrop-blur-xl"
+            ? "blur-surface border-b border-line bg-ink/92"
             : "border-b border-transparent"
         }`}
       >
@@ -150,8 +150,15 @@ export function SiteHeader() {
             aria-modal="true"
             aria-label="Menu"
           >
-            <div className="grid-field absolute inset-0 bg-ink/95 backdrop-blur-2xl" />
-            <div className="bg-accent/10 absolute -top-40 -right-20 size-[26rem] rounded-full blur-[120px]" />
+            <div className="grid-field blur-surface absolute inset-0 bg-ink/98" />
+            {/* Gradient rather than a blurred circle — see Ambient for why. */}
+            <div
+              className="absolute -top-40 -right-20 size-[26rem] rounded-full"
+              style={{
+                background:
+                  "radial-gradient(closest-side, var(--glow-soft), transparent 100%)",
+              }}
+            />
 
             <div className="relative flex h-full flex-col">
               <div className="flex h-18 items-center justify-between px-5">

@@ -89,7 +89,7 @@ export function ProjectModal({
         >
           <button
             type="button"
-            className="fixed inset-0 cursor-default bg-black/80 backdrop-blur-md"
+            className="blur-surface fixed inset-0 cursor-default bg-black/88"
             onClick={onClose}
             aria-label="Close case study"
             tabIndex={-1}
@@ -100,14 +100,14 @@ export function ProjectModal({
             role="dialog"
             aria-modal="true"
             aria-labelledby="case-study-title"
-            className="relative mx-auto my-4 max-w-4xl rounded-2xl border border-line bg-ink-raised/95 shadow-[0_60px_160px_-60px_var(--glow-strong)] backdrop-blur-2xl sm:my-8"
+            className="bg-ink-raised relative mx-auto my-4 max-w-4xl rounded-2xl border border-line shadow-[0_60px_160px_-60px_var(--glow-strong)] sm:my-8"
             initial={reduceMotion ? undefined : { opacity: 0, y: 28, scale: 0.985 }}
             animate={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
             exit={reduceMotion ? undefined : { opacity: 0, y: 20, scale: 0.99 }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           >
             {/* Header */}
-            <div className="sticky top-0 z-10 flex items-start justify-between gap-6 rounded-t-2xl border-b border-line bg-ink-raised/90 px-6 py-5 backdrop-blur-xl sm:px-8">
+            <div className="bg-ink-raised sticky top-0 z-10 flex items-start justify-between gap-6 rounded-t-2xl border-b border-line px-6 py-5 sm:px-8">
               <div className="min-w-0">
                 <p className="route-label">{project.category}</p>
                 <h2

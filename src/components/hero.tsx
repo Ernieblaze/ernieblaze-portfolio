@@ -24,38 +24,76 @@ function hostname(url: string): string {
 }
 
 /**
- * Types out one address, holds, then moves to the next.
- * Under reduced motion it returns the first address, fully typed, and stops.
+ * Types one address out, a character at a time.
+ *
+ * This is its own component on purpose. The character counter changes ~18 times
+ * a second, and when that state lived in `Hero` every tick re-rendered the
+ * whole hero — heading, stats, image, and twenty-odd motion elements — for the
+ * sake of one more letter in a span. Keeping it in a leaf means React only
+ * reconciles this span, and the rest of the hero renders when the project
+ * actually changes.
  */
-function useTypedAddress(addresses: string[], enabled: boolean) {
-  const [index, setIndex] = useState(0);
-  const [chars, setChars] = useState(enabled ? 0 : Infinity);
+function TypedAddress({ value, enabled }: { value: string; enabled: boolean }) {
+  const [chars, setChars] = useState(enabled ? 0 : value.length);
 
   useEffect(() => {
-    if (!enabled || addresses.length === 0) return;
-
-    const current = addresses[index % addresses.length];
-
-    if (chars < current.length) {
-      const timer = setTimeout(() => setChars((n) => n + 1), TYPE_MS);
-      return () => clearTimeout(timer);
+    if (!enabled) {
+      setChars(value.length);
+      return;
     }
 
-    if (addresses.length === 1) return;
+    setChars(0);
+    let typed = 0;
+    const timer = setInterval(() => {
+      typed += 1;
+      setChars(typed);
+      // Stop the moment the address is complete — nothing should keep ticking
+      // for the seconds this address is held on screen.
+      if (typed >= value.length) clearInterval(timer);
+    }, TYPE_MS);
 
-    const timer = setTimeout(() => {
-      setIndex((n) => (n + 1) % addresses.length);
-      setChars(0);
-    }, HOLD_MS);
+    return () => clearInterval(timer);
+  }, [value, enabled]);
+
+  const complete = chars >= value.length;
+
+  return (
+    <span className="flex items-center">
+      <span className="text-fg/70">{value.slice(0, chars)}</span>
+      {!complete && (
+        <span
+          className="bg-accent animate-caret ml-0.5 inline-block h-3 w-[2px] align-middle"
+          aria-hidden="true"
+        />
+      )}
+    </span>
+  );
+}
+
+/**
+ * Rotates through the showcased projects.
+ *
+ * Each one is held for as long as it takes to type its address plus a beat, so
+ * the rotation stays in step with `TypedAddress` without the two needing to
+ * talk to each other.
+ */
+function useShowcaseIndex(addresses: string[], enabled: boolean) {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (!enabled || addresses.length < 2) return;
+
+    const current = addresses[index % addresses.length] ?? "";
+    const dwell = current.length * TYPE_MS + HOLD_MS;
+
+    const timer = setTimeout(
+      () => setIndex((n) => (n + 1) % addresses.length),
+      dwell,
+    );
     return () => clearTimeout(timer);
-  }, [addresses, chars, enabled, index]);
+  }, [addresses, enabled, index]);
 
-  const current = addresses[index % addresses.length] ?? "";
-  return {
-    index: index % Math.max(addresses.length, 1),
-    text: enabled ? current.slice(0, chars) : current,
-    complete: !enabled || chars >= current.length,
-  };
+  return addresses.length ? index % addresses.length : 0;
 }
 
 export function Hero({ projects }: { projects: Project[] }) {
@@ -66,8 +104,8 @@ export function Hero({ projects }: { projects: Project[] }) {
     [showcase],
   );
 
-  const typed = useTypedAddress(addresses, !reduceMotion);
-  const active = showcase[typed.index];
+  const index = useShowcaseIndex(addresses, !reduceMotion);
+  const active = showcase[index];
 
   return (
     <section
@@ -201,15 +239,10 @@ export function Hero({ projects }: { projects: Project[] }) {
                 <BrowserFrame
                   className="shadow-[0_40px_120px_-40px_var(--glow-mid)]"
                   address={
-                    <span className="flex items-center">
-                      <span className="text-fg/70">{typed.text}</span>
-                      {!typed.complete && (
-                        <span
-                          className="bg-accent animate-caret ml-0.5 inline-block h-3 w-[2px] align-middle"
-                          aria-hidden="true"
-                        />
-                      )}
-                    </span>
+                    <TypedAddress
+                      value={addresses[index] ?? ""}
+                      enabled={!reduceMotion}
+                    />
                   }
                 >
                   <div className="relative aspect-16/10">

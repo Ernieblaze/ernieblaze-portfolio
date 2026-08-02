@@ -22,6 +22,21 @@ const LINK_DISTANCE = 128;
 const POINTER_RADIUS = 170;
 const MAX_PARTICLES = 90;
 
+/*
+ * Phone budget.
+ *
+ * The link pass is the expensive half: it walks neighbouring cells and strokes
+ * a line per pair, and stroking is far dearer than filling a dot. On a narrow
+ * screen the lines are also the part nobody looks at, so below this width the
+ * field draws dots only — which is most of the beauty at a fraction of the
+ * cost. Device pixel ratio is capped harder too: Android phones routinely
+ * report 3, and rendering the canvas at 3× is triple the fill rate for a
+ * difference no one can see on a background of soft dots.
+ */
+const NARROW_WIDTH = 640;
+const MAX_DPR_NARROW = 1.5;
+const MAX_DPR_WIDE = 2;
+
 type Particle = {
   x: number;
   y: number;
@@ -56,6 +71,7 @@ export function ParticleField({ className = "" }: { className?: string }) {
     let height = 0;
     let frame = 0;
     let running = false;
+    let drawLinks = true;
     let theme = readTheme();
 
     const pointer = { x: -9999, y: -9999, active: false };
@@ -63,7 +79,13 @@ export function ParticleField({ className = "" }: { className?: string }) {
     function resize() {
       if (!canvas || !context) return;
       const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const narrow = rect.width < NARROW_WIDTH;
+      drawLinks = !narrow;
+
+      const dpr = Math.min(
+        window.devicePixelRatio || 1,
+        narrow ? MAX_DPR_NARROW : MAX_DPR_WIDE,
+      );
 
       width = rect.width;
       height = rect.height;
@@ -72,10 +94,13 @@ export function ParticleField({ className = "" }: { className?: string }) {
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       // Roughly one particle per 13k px², so a phone gets a handful and a
-      // desktop gets a field — without either looking sparse or soupy.
+      // desktop gets a field — without either looking sparse or soupy. Phones
+      // are thinned further: fewer, slightly larger dots read better small and
+      // cost less per frame.
+      const density = narrow ? 22000 : 13000;
       const target = Math.min(
         MAX_PARTICLES,
-        Math.max(18, Math.round((width * height) / 13000)),
+        Math.max(narrow ? 12 : 18, Math.round((width * height) / density)),
       );
 
       particles = Array.from({ length: target }, () => ({
@@ -90,6 +115,25 @@ export function ParticleField({ className = "" }: { className?: string }) {
     function draw() {
       if (!context) return;
       context.clearRect(0, 0, width, height);
+
+      if (drawLinks) drawLinkPass();
+      drawDots();
+    }
+
+    function drawDots() {
+      if (!context) return;
+      // One fillStyle for the whole pass — setting it per particle forces the
+      // canvas to re-parse the colour string on every dot, every frame.
+      context.fillStyle = `rgb(${theme.rgb} / ${theme.dotAlpha})`;
+      for (const particle of particles) {
+        context.beginPath();
+        context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+        context.fill();
+      }
+    }
+
+    function drawLinkPass() {
+      if (!context) return;
 
       // Bucket particles into cells the size of the link radius, so each one
       // only tests its own cell and the neighbours it hasn't seen yet.
@@ -143,12 +187,6 @@ export function ParticleField({ className = "" }: { className?: string }) {
         }
       }
 
-      for (const particle of particles) {
-        context.fillStyle = `rgb(${theme.rgb} / ${theme.dotAlpha})`;
-        context.beginPath();
-        context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-        context.fill();
-      }
     }
 
     function step() {
